@@ -4,9 +4,10 @@ import Header from "../Header";
 import io from "socket.io-client";
 import axios from "axios";
 import moment from "moment";
-import { Modal, Button } from "react-bootstrap";
+import { Table, Modal, Button } from "react-bootstrap";
 import PosItem from "./PosItem";
 import ProductsDropdown from "./ProductsDropdown";
+import SearchBar from "./searchBar";
 
 const HOST = "http://localhost:8001";
 let socket = io.connect(HOST);
@@ -16,8 +17,6 @@ class Pos extends Component {
     super(props);
     this.state = {
       items: [],
-      quantity: 1,
-      id: 0,
       selectedProduct:{},
       addItemModal: false,
       checkOutModal: false,
@@ -25,22 +24,29 @@ class Pos extends Component {
       totalPayment: 0,
       total: 0,
       changeDue: 0,
-      name: "",
-      price: 0, 
-      products:[]
+      products:[],
+      currentItem: {
+        id: "",
+        name: "",
+        price: 0,
+        unitPrice: 0,
+        quantity: 1,
+      }
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleName = this.handleName.bind(this);
     this.handlePrice = this.handlePrice.bind(this);
+    this.handleQuantity = this.handleQuantity.bind(this);
     this.handlePayment = this.handlePayment.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleCheckOut = this.handleCheckOut.bind(this);
+    this.handleProductAdd = this.handleProductAdd.bind(this);
   }
 
   componentWillMount() {
     var url = HOST + `/api/inventory/products`;
     axios.get(url).then(response => {
-      this.setState({ products: response.data });
+      this.setState({ products: response.data }, ()=>{console.log("state updated: ", response)});
     });
   }
 
@@ -54,24 +60,42 @@ class Pos extends Component {
     this.setState({ addItemModal: false });
 
     const currentItem = {
-      id: this.state.id++,
+      id: this.state.id,
       name: this.state.name,
       price: this.state.price,
-      quantity: this.state.quantity
+      unitPrice: this.state.unitPrice,
+      quantity: this.state.quantity,
     };
     this.addItem(currentItem);
     this.updateTotal();
   };
   addItem = (item) => {
+    console.log("this.state.items: ", this.state.items);
     var items = this.state.items;
-    items.push(item);
-    this.setState({ items: items });
+    var foundItemIndex = items.findIndex(i => i.id == item.id);
+    console.log("foundItemIndex: ", foundItemIndex);
+    if(foundItemIndex >= 0){
+      this.plusQuantity(items, foundItemIndex);
+      if(items[foundItemIndex] != null && items[foundItemIndex] != undefined){
+        items[foundItemIndex].quantity++;
+      }
+    }else{
+      items.push(item);
+    }
+    this.setState({ items: items }, ()=> console.log("updated state addItem: ", this.state));
   }
+  plusQuantity = (item, foundItemIndex) => {
+
+  };
+
   handleName = e => {
     this.setState({ name: e.target.value });
   };
   handlePrice = e => {
     this.setState({ price: e.target.value });
+  };
+  handleQuantity = e => {
+    this.setState({ price: this.state.unitPrice * e.target.value });
   };
   handlePayment = () => {
     this.setState({ checkOutModal: false });
@@ -134,8 +158,21 @@ class Pos extends Component {
     console.log("item: ", item);
     if(item != undefined && item != null){
       let selectedProduct = this.state.products.find(function(prod){ return prod._id == item.value });
-      this.setState({selectedProduct: selectedProduct, price: selectedProduct.price}, ()=> console.log("updated state: ", this.state))
+      this.handleProductAdd(selectedProduct);
+      //this.setState({selectedProduct: selectedProduct, unitPrice: selectedProduct.price}, ()=> console.log("updated state: ", this.state))
     }
+  };
+
+  handleProductAdd = (selectedProduct) => {
+    const currentItem = {
+      id: "_billableItem_" + selectedProduct._id,
+      name: selectedProduct.name,
+      price: selectedProduct.price,
+      unitPrice: selectedProduct.price,
+      quantity: 1,
+    };
+    this.addItem(currentItem);
+    this.updateTotal();
   };
 
   render() {
@@ -188,13 +225,14 @@ class Pos extends Component {
     };
 
     var renderLivePos = () => {
+      console.log("renderLivePos, items: ", items)
       if (items.length === 0) {
         return <tr>
-                <td>No products added</td>
+                <td colSpan={7} >No products added</td>
             </tr>;
       } else {
         return items.map(
-          item => <PosItem key={items.length} {...item} onChange={this.handleChange} />,
+          item => <PosItem key={item.id} {...item} onChange={this.handleChange} />,
           this
         );
       }
@@ -203,191 +241,23 @@ class Pos extends Component {
     return (
       <div>
         <Header />
+        <ProductsDropdown
+              onProductSelect={this.handleProductSelect}
+          />
         <div className="container">
-          <div className="text-center">
-            <span className="lead">Total</span>
-            <br />
-            <span className="text-success checkout-total-price">
-              ${this.state.total}
-              <span />
-            </span>
-            <div>
-              <button
-                className="btn btn-success lead"
-                id="checkoutButton"
-                onClick={this.handleCheckOut}
-              >
-                <i className="glyphicon glyphicon-shopping-cart" />
-                <br />
-                <br />
-                C<br />
-                h<br />
-                e<br />
-                c<br />
-                k<br />
-                o<br />
-                u<br />
-                t
-              </button>
-              <div className="modal-body">
-                <Modal show={this.state.checkOutModal}>
-                  <Modal.Header closeButton>
-                    <Modal.Title>Checkout</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    <div ng-hide="transactionComplete" className="lead">
-                      <h3>
-                        Total:
-                        <span className="text-danger">
-                          {" "}
-                          {this.state.total}{" "}
-                        </span>
-                      </h3>
-
-                      <form
-                        className="form-horizontal"
-                        name="checkoutForm"
-                        onSubmit={this.handlePayment}
-                      >
-                        <div className="form-group">
-                          <div className="input-group">
-                            <div className="input-group-addon">$</div>
-                            <input
-                              type="number"
-                              id="checkoutPaymentAmount"
-                              className="form-control input-lg"
-                              name="payment"
-                              onChange={event =>
-                                this.setState({
-                                  totalPayment: event.target.value
-                                })
-                              }
-                              min="0"
-                            />
-                          </div>
-                        </div>
-
-                        <p className="text-danger">Enter payment amount.</p>
-                        <div className="lead" />
-                        <Button
-                          className="btn btn-primary btn-lg lead"
-                          onClick={this.handlePayment}
-                        >
-                          Print Receipt
-                        </Button>
-                      </form>
-                    </div>
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <Button
-                      onClick={() => this.setState({ checkOutModal: false })}
-                    >
-                      Close
-                    </Button>
-                  </Modal.Footer>
-                </Modal>
-              </div>
-            </div>
-          </div>
           {renderAmountDue()}
           {renderReceipt()}
-          <table className="pos table table-responsive table-striped table-hover">
+          <div className="tableContainer">
+          <table className="pos table table-responsive table-striped table-hover posTable">
             <thead>
               <tr>
                 <td colSpan="6" className="text-center">
-                  <span className="pull-left">
-                    <button
-                      onClick={() => this.setState({ addItemModal: true })}
-                      className="btn btn-default btn-sm"
-                    >
-                      <i className="glyphicon glyphicon-plus" /> Add Item
-                    </button>
-                  </span>
-                  <Modal show={this.state.addItemModal} onHide={this.close}>
-                    <Modal.Header closeButton>
-                    <ProductsDropdown
-                              groupedOptions={this.state.products}
-                              onProductSelect={this.handleProductSelect}
-                          />
-                      
-                    </Modal.Header>
-                    <Modal.Body>
-                      <form
-                        ref="form"
-                        onSubmit={this.handleSubmit}
-                        className="form-horizontal"
-                      >
-                        
-
-                        <div className="form-group">
-                          <label className="col-md-2 lead" htmlFor="name">
-                            Name
-                          </label>
-                          <div className="col-md-8 input-group">
-                            <input
-                              className="form-control"
-                              name="name"
-                              required
-                              onChange={this.handleName}
-                            />
-                          </div>
-                        </div>
-
-                        <div className="form-group">
-                          <label className="col-md-2 lead" htmlFor="price">
-                            Quantity
-                          </label>
-                          <div className="col-md-8 input-group">
-                            <input
-                              type="number"
-                              step="any"
-                              min="1"
-                              onChange={this.handlePrice}
-                              className="form-control"
-                              name="quntity"
-                              required
-                              value={this.state.quantity}
-                            />
-                          </div>
-                        </div>
-
-                        <div className="form-group">
-                          <label className="col-md-2 lead" htmlFor="price">
-                            Price
-                          </label>
-                          <div className="col-md-8 input-group">
-                            <div className="input-group-addon">PKR</div>
-
-                            <input
-                              type="number"
-                              step="any"
-                              min="0"
-                              onChange={this.handlePrice}
-                              className="form-control"
-                              name="price"
-                              disabled={true}
-                              value={this.state.price}
-                            />
-                          </div>
-                        </div>
-
-                        <p className="text-danger">Enter price for item.</p>
-                      </form>
-                    </Modal.Body>
-                    <Modal.Footer>
-                      <Button onClick={this.handleSubmit}>Add</Button>
-                      <Button
-                        onClick={() => this.setState({ addItemModal: false })}
-                      >
-                        Cancel
-                      </Button>
-                    </Modal.Footer>
-                  </Modal>
+                  
                 </td>
               </tr>
               <tr className="titles">
                 <th>Name</th>
-                <th>Price</th>
+                <th>Unit Price</th>
                 <th>Quantity</th>
                 <th>Tax</th>
                 <th>Total</th>
@@ -395,7 +265,30 @@ class Pos extends Component {
               </tr>
             </thead>
             <tbody>{renderLivePos()}</tbody>
+            <tfoot className="tableFoot" >
+            <tr>
+              <td colSpan={3}>
+              <span className="text-success checkout-total-price">
+              Total Bill
+                </span>
+                </td>
+              <td colSpan={3}>
+                <span className="text-success checkout-total-price pull-right">
+                  {this.state.total}
+                </span>
+              </td>
+            </tr>
+          </tfoot>
           </table>
+          </div>
+          <div>
+            <button
+              className="btn btn-success lead"
+              onClick={this.handleCheckOut}
+            >
+              <i className="glyphicon glyphicon-shopping-cart" />Checkout
+            </button>
+          </div>
         </div>
       </div>
     );

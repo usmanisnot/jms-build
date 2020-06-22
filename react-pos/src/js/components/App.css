@@ -56,7 +56,7 @@ legend {
 .table>tbody>tr>td,
 .table>thead>tr>th {
 	padding-top: 20px;
-	padding-bottom: 20px;
+	/* padding-bottom: 20px; */
 }
 
 table thead th {
@@ -147,7 +147,7 @@ ul.nav-menu li a h3 {
 .checkout-total-price {
 	display: inline-flex;
 	font-size: 35px;
-	letter-spacing: 3px;
+	letter-spacing: 1px;
 }
 
 #checkoutPaymentAmount {
@@ -198,4 +198,72 @@ ul.nav-menu li a h3 {
 @keyframes fadeout {
     from {bottom: 30px; opacity: 1;}
     to {bottom: 0; opacity: 0;}
+}
+
+.posTable{
+	max-width: 990px;
+}
+
+.Select-input{
+	height: 70px !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+.Select-control{
+	border: 0 !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+.Select-arrow-zone, .Select-clear-zone{
+	display: none !important;
+}
+
+.Select-value-label{
+	font-size: 47px;
+}
+
+#react-select-2--value-item{
+	line-height: 57px;
+}
+
+.Select-placeholder{
+	font-size: large;
+}
+
+#search{
+	padding: 0 !important;
+	margin: 0 !important;
+	box-sizing: unset !important;
+}
+
+.tableContainer{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	
+}
+
+.tableFoot{
+	background-color: rgb(176, 241, 243);
+}
+
+@media print /*--This is for Print--*/
+{
+    .btn
+    {
+        display: none;
+    }
+    .tble
+    {
+        background-color: #CD853F;
+        border:1px solid green;
+        -webkit-print-color-adjust: exact
+/*above line of codes will set the table background-color and change the border color when we give the print and preview (print preview only when we see on print preview via browser) command*/
+
+	}
+	#search{
+		display: none;
+	}
 }

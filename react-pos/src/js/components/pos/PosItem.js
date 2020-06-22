@@ -11,13 +11,16 @@ class PosItem extends Component {
       this.props.onChange(id, itemNumber);
     }
   };
+  handleChangeQuantity = (id, e) => {
+    this.props.onChange(id, e.target.value);
+  };
   render() {
     const { id, name, price, quantity } = this.props;
     var itemNumber = quantity;
     return (
       <tr>
-        <td className="col-md-2"> {name}</td>
-        <td className="col-md-1"> ${price}</td>
+        <td defaultValue="" className="col-md-4"> {name}</td>
+        <td defaultValue="0.00" className="col-md-2"> {price} </td>
         <td className="col-md-2">
         
         <button
@@ -28,7 +31,7 @@ class PosItem extends Component {
         </button>
 
           <div className="col-md-6">
-            <input type="number" value={itemNumber} />
+            <input type="number" minLength="0" onChange={(e) => this.handleChangeQuantity(id, e)} value={itemNumber} />
           </div>
 
           <button
@@ -38,9 +41,9 @@ class PosItem extends Component {
             <i className="glyphicon glyphicon-plus" />
           </button>
         </td>
-        <td className="col-md-2">$0.00</td>
-        <td className="col-md-2">{price}</td>
-        <td className="col-md-2">
+        <td className="col-md-1">0.00</td>
+        <td defaultValue="0.00" className="col-md-1">{price}</td>
+        <td className="col-md-1">
           <button
             className="btn btn-danger"
             onClick={() => this.handleChange(id, "delete")}

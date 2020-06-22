@@ -38,6 +38,14 @@ app.get("/products", function(req, res) {
   });
 });
 
+// GET all inventory products
+app.get("/products/search", function(req, res) {
+  inventoryDB.find({name: new RegExp(req.query.term)}, function(err, docs) {
+    console.log("searching inventory products");
+    res.send(docs);
+  });
+});
+
 // post inventory product
 app.post("/product", function(req, res) {
   var newProduct = req.body;
