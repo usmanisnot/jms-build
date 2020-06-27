@@ -4,6 +4,7 @@ var express = require("express"),
   server = http.createServer(app),
   bodyParser = require("body-parser"),
   io = require("socket.io")(server),
+  path = require('path');
   liveCart = [];
 
 const PORT = process.env.PORT || 8001;
@@ -29,8 +30,14 @@ app.all("/*", function(req, res, next) {
   }
 });
 
-app.get("/", function(req, res) {
-  res.send(" Real time POS web app running.");
+app.use(express.static(path.join(__dirname, 'build')));
+
+// app.get("/", function(req, res) {
+//   res.send(" Real time POS web app running.");
+// });
+
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 app.use("/api/inventory", require("./api/inventory"));
