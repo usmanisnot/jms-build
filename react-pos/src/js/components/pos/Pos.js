@@ -8,6 +8,8 @@ import { Table, Modal, Button } from "react-bootstrap";
 import PosItem from "./PosItem";
 import ProductsDropdown from "./ProductsDropdown";
 import SearchBar from "./searchBar";
+import Checkout from "../Checkout"
+import htmlToImage from 'html-to-image';
 
 const HOST = "http://localhost:8001";
 let socket = io.connect(HOST);
@@ -109,8 +111,9 @@ class Pos extends Component {
       socket.emit("update-live-cart", []);
     } else {
       this.setState({ changeDue: amountDiff });
-      this.setState({ amountDueModal: true });
+      //this.setState({ amountDueModal: true });
     }
+    this.OpenPopup();
   };
   handleChange = (id, value) => {
     var items = this.state.items;
@@ -175,6 +178,10 @@ class Pos extends Component {
     this.updateTotal();
   };
 
+  OpenPopup () {
+    window.open("./template.html", '_blank');
+  };
+
   render() {
     var { quantity, modal, items } = this.state;
 
@@ -201,26 +208,82 @@ class Pos extends Component {
     };
     var renderReceipt = () => {
       return (
-        <Modal show={this.state.receiptModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Receipt</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <h3>
-              Total:
-              <span className="text-danger">{this.state.totalPayment}</span>
-            </h3>
-            <h3>
-              Change Due:
-              <span className="text-success">{this.state.changeDue}</span>
-            </h3>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={() => this.setState({ receiptModal: false })}>
-              close
-            </Button>
-          </Modal.Footer>
-        </Modal>
+        <div style={{display: 'none'}} id="recipt_mapped" >
+          
+          <div id="invoice-POS">
+            <center id="top">
+              <div className="logo"></div>
+              <div className="info"> 
+              <h2>Javed Medical Store</h2>
+              <p> 
+                Main bazar, Kot Samaba <br />
+                Phone: 0300-6716165
+              </p>
+            </div>
+            </center>
+      
+            <div id="mid-line">
+              <div style={{color: "#fff"}}>
+            ____________________
+            </div>
+            </div>
+      
+            <div id="bot">
+
+                  <div id="table">
+                    <table>
+                      <tr className="tabletitle">
+                        <td className="item"><h2>Item</h2></td>
+                        <td className="Hours"><h2>Qty</h2></td>
+                        <td className="Rate"><h2>Sub Total</h2></td>
+                      </tr>
+
+                      <tr className="service">
+                        <td className="tableitem"><p className="itemtext">panadol extra</p></td>
+                        <td className="tableitem"><p className="itemtext">5</p></td>
+                        <td className="tableitem"><p className="itemtext">30.00</p></td>
+                      </tr>
+
+                      <tr className="service">
+                        <td className="tableitem"><p className="itemtext">Caflam 50mg</p></td>
+                        <td className="tableitem"><p className="itemtext">3</p></td>
+                        <td className="tableitem"><p className="itemtext">95.00</p></td>
+                      </tr>
+
+                      <tr className="service">
+                        <td className="tableitem"><p className="itemtext">Nestle water large</p></td>
+                        <td className="tableitem"><p className="itemtext">1</p></td>
+                        <td className="tableitem"><p className="itemtext">70.00</p></td>
+                      </tr>
+
+                      <tr className="service">
+                        <td className="tableitem"><p className="itemtext">Medicam medium</p></td>
+                        <td className="tableitem"><p className="itemtext">1</p></td>
+                        <td className="tableitem"><p className="itemtext">55.00</p></td>
+                      </tr>
+
+                      <tr className="tabletitle">
+                        <td></td>
+                        <td className="Rate"><h2>tax</h2></td>
+                        <td className="payment"><h2>RS: 0</h2></td>
+                      </tr>
+
+                      <tr className="tabletitle">
+                        <td></td>
+                        <td className="Rate"><h2>Total</h2></td>
+                        <td className="payment"><h2>RS: 250</h2></td>
+                      </tr>
+
+                    </table>
+                  </div>
+
+                  <div id="legalcopy">
+                    <p className="legal"><strong>Thank you for your business!</strong>  Errors and omissions excepted. 
+                    </p>
+                  </div>
+                </div>
+          </div>
+        </div>
       );
     };
 
@@ -244,6 +307,84 @@ class Pos extends Component {
         <ProductsDropdown
               onProductSelect={this.handleProductSelect}
           />
+          <div>
+              <button
+                className="btn btn-success lead"
+                id="checkoutButton"
+                onClick={this.handleCheckOut}
+              >
+                <i className="glyphicon glyphicon-shopping-cart" />
+                <br />
+                <br />
+                C<br />
+                h<br />
+                e<br />
+                c<br />
+                k<br />
+                o<br />
+                u<br />
+                t
+              </button>
+              <div className="modal-body">
+                <Modal show={this.state.checkOutModal}>
+                  <Modal.Header closeButton>
+                    <Modal.Title>Checkout</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <div ng-hide="transactionComplete" className="lead">
+                      <h3>
+                        Total:
+                        <span className="text-danger">
+                          {" "}
+                          {this.state.total}{" "}
+                        </span>
+                      </h3>
+
+                      <form
+                        className="form-horizontal"
+                        name="checkoutForm"
+                        onSubmit={this.handlePayment}
+                      >
+                        <div className="form-group">
+                          <div className="input-group">
+                            <div className="input-group-addon">$</div>
+                            <input
+                              type="number"
+                              id="checkoutPaymentAmount"
+                              className="form-control input-lg"
+                              name="payment"
+                              onChange={event =>
+                                this.setState({
+                                  totalPayment: event.target.value
+                                })
+                              }
+                              min="0"
+                            />
+                          </div>
+                        </div>
+
+                        <p className="text-danger">Enter payment amount.</p>
+                        <div className="lead" />
+                        <Button
+                          className="btn btn-primary btn-lg lead"
+                          onClick={this.handlePayment}
+                        >
+                          Print Receipt
+                        </Button>
+                      </form>
+                    </div>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button
+                      onClick={() => this.setState({ checkOutModal: false })}
+                    >
+                      Close
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
+              </div>
+            </div>
+
         <div className="container">
           {renderAmountDue()}
           {renderReceipt()}
@@ -264,30 +405,24 @@ class Pos extends Component {
                 <th />
               </tr>
             </thead>
-            <tbody>{renderLivePos()}</tbody>
+            <tbody>
+            {renderLivePos()}
+            </tbody>
             <tfoot className="tableFoot" >
             <tr>
               <td colSpan={3}>
-              <span className="text-success checkout-total-price">
+              <span className="text-primary checkout-total-price">
               Total Bill
                 </span>
                 </td>
               <td colSpan={3}>
-                <span className="text-success checkout-total-price pull-right">
+                <span className="text-primary checkout-total-price pull-right">
                   {this.state.total}
                 </span>
               </td>
             </tr>
           </tfoot>
           </table>
-          </div>
-          <div>
-            <button
-              className="btn btn-success lead"
-              onClick={this.handleCheckOut}
-            >
-              <i className="glyphicon glyphicon-shopping-cart" />Checkout
-            </button>
           </div>
         </div>
       </div>

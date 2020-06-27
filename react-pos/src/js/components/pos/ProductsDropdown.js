@@ -17,6 +17,7 @@ class ProductsDropdown extends Component {
     console.log("props: ", props);
     this.state = {options: [], selectValue: {}}
     console.log("this.state: ", this.state);
+    //this.selectRef = React.createRef();
   }
   mapOnSelectData = (arr) => {
     let result = []
@@ -36,11 +37,35 @@ class ProductsDropdown extends Component {
       let data = this.mapOnSelectData(response.data)
       this.setState({ options: data }, ()=>{console.log("state updated: ", response)});
     });
+    document.removeEventListener("keydown", this._handleKeyDown);
   }
+
+  componentDidMount(){
+      document.addEventListener("keydown", this._handleKeyDown);
+  }
+
+  _handleKeyDown = (event) => {
+    console.log("key DOWN: ", this);
+    switch( event.keyCode ) {
+        case 32:
+            this.refs.serachIt.focus();
+            break;
+        default: 
+            break;
+    }
+}
+
   onChangehandler = (selectValue) => {
     this.setState({ selectValue }, ()=>console.log("state updated: ", this.state))
     this.props.onProductSelect(selectValue);
   }
+
+  keyPressed(event) {
+    console.log("key pressed: ", event);
+    if (event.key === "Enter") {
+    }
+  }
+
   render() {
     return (
       <div className="s003">
@@ -54,6 +79,8 @@ class ProductsDropdown extends Component {
                   id="search"
                   placeholder= "Search..."
                   className="selectComponenet"
+                  onKeyPress={this.keyPressed}
+                  ref="serachIt"
                   />
                 </div>
             </div>

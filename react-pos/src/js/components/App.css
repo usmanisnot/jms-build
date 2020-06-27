@@ -36,7 +36,7 @@ legend {
 }
 
 .table>tbody {
-	max-height: 800px;
+	height: 100px;
 	overflow: scroll;
 }
 
@@ -222,6 +222,7 @@ ul.nav-menu li a h3 {
 
 .Select-value-label{
 	font-size: 47px;
+	line-height: 57px;
 }
 
 #react-select-2--value-item{
