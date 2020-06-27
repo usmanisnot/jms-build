@@ -7,8 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "build": "npm run build",
-    "prepublish": "npm run build",
+    "build": "node index.js",
+    "prepublish": "node index.js",
     "publish": "gh-pages -d react-pos/build"
   },
   "author": "Krissanawat",
