@@ -32,13 +32,13 @@ app.all("/*", function(req, res, next) {
 
 app.use(express.static(path.join(__dirname, 'build')));
 
-// app.get("/", function(req, res) {
-//   res.send(" Real time POS web app running.");
-// });
-
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+app.get("/", function(req, res) {
+  res.send(" Real time POS web app running.");
 });
+
+// app.get('/*', (req, res) => {
+  // res.sendFile(path.join(__dirname, 'build', 'index.html'));
+// });
 
 app.use("/api/inventory", require("./api/inventory"));
 app.use("/api", require("./api/transactions"));
