@@ -6,13 +6,15 @@ import Transactions from "./Transactions";
 import LiveCart from "./LiveCart";
 
 const Main = () => (
-  <main>
-    <Switch>
-      <Route exact path="/" component={Pos} />
-      <Route path="/inventory" component={Inventory} />
-      <Route path="/transactions" component={Transactions} />
-      <Route path="/livecart" component={LiveCart} />
-    </Switch>
+  <main className="mainDiv paper">
+    <div className="mainChild">
+      <Switch>
+        <Route exact path="/" component={Pos} />
+        <Route path="/inventory" component={Inventory} />
+        <Route path="/transactions" component={Transactions} />
+        <Route path="/livecart" component={LiveCart} />
+      </Switch>
+    </div>
   </main>
 );
 

@@ -5,6 +5,10 @@ import Product from "./Product";
 import axios from "axios";
 import { Modal, Button } from "react-bootstrap";
 
+import { AgGridReact, SortableHeaderComponent } from "ag-grid-react";
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-alpine.css";
+
 const HOST = "http://localhost:8001";
 
 class Inventory extends Component {
@@ -16,52 +20,115 @@ class Inventory extends Component {
       productFormModal: false,
       name: "",
       snackMessage: "",
-      quantity: "",
-      price: ""
+      quantity: 1,
+      price: "",
+      stockProvider: "",
+      barCode: "",
+      columnDefs: [
+        {
+          headerName: "Name",
+          field: "name",
+          sortable: true,
+          filter: true,
+          editable: true,
+          cellEditor: "agTextCellEditor",
+          valueSetter: function (params) {
+            params.data.name = params.newValue;
+            console.log("this: ", this);
+            return true;
+          },
+        },
+        {
+          headerName: "Price",
+          field: "price",
+          sortable: true,
+          filter: true,
+          editable: true,
+        },
+        {
+          headerName: "Quantity",
+          field: "quantity",
+          sortable: true,
+          filter: true,
+          editable: true,
+        },
+        {
+          headerName: "Bar Code",
+          field: "barCode",
+          sortable: true,
+          filter: true,
+          editable: true,
+        },
+        {
+          headerName: "Distributer",
+          field: "stockProvider",
+          sortable: true,
+          filter: true,
+          editable: true,
+        },
+        {
+          headerName: "Unique id",
+          field: "_id",
+          hide: true,
+        },
+      ],
     };
+
     this.handleNewProduct = this.handleNewProduct.bind(this);
     this.handleName = this.handleName.bind(this);
     this.handlePrice = this.handlePrice.bind(this);
     this.handleQuantity = this.handleQuantity.bind(this);
     this.handleSnackbar = this.handleSnackbar.bind(this);
   }
+
+  handleNameEditinGrid(params) {}
+
   componentWillMount() {
+    //get all products from server
+    this.refreshAllProducts();
+  }
+  refreshAllProducts() {
     var url = HOST + `/api/inventory/products`;
-    axios.get(url).then(response => {
-      this.setState({ products: response.data });
+    axios.get(url).then((response) => {
+      this.setState({ products: response.data }, () =>
+        console.log("state products: ", this.state)
+      );
     });
   }
-  handleNewProduct = e => {
+  handleNewProduct = (e) => {
     e.preventDefault();
     this.setState({ productFormModal: false });
     var newProduct = {
       name: this.state.name,
       quantity: this.state.quantity,
-      price: this.state.price
+      price: this.state.price,
+      stockProvider: this.state.stockProvider,
+      barCode: this.state.barCode,
     };
 
     axios
       .post(HOST + `/api/inventory/product`, newProduct)
-      .then(
-        response =>
-          this.setState({ snackMessage: "Product Added Successfully!" }),
-        this.handleSnackbar()
-      )
-      .catch(err => {
+      .then((response) => {
+        this.setState({ snackMessage: "Product Added Successfully!" });
+        console.log("then", response);
+        this.refreshAllProducts();
+        this.handleSnackbar();
+      })
+      .catch((err) => {
         console.log(err),
           this.setState({ snackMessage: "Product failed to save" }),
           this.handleSnackbar();
       });
   };
-  handleEditProduct = editProduct => {
+  handleEditProduct = (editProduct) => {
     axios
       .put(HOST + `/api/inventory/product`, editProduct)
-      .then(response => {
+      .then((response) => {
         this.setState({ snackMessage: "Product Updated Successfully!" });
         this.handleSnackbar();
         return true;
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         this.setState({ snackMessage: "Product Update Failed!" }),
           this.handleSnackbar();
@@ -69,21 +136,31 @@ class Inventory extends Component {
       });
   };
 
-  handleName = e => {
+  handleName = (e) => {
     this.setState({ name: e.target.value });
   };
-  handlePrice = e => {
+  handlePrice = (e) => {
     this.setState({ price: e.target.value });
   };
-  handleQuantity = e => {
+  handleQuantity = (e) => {
     this.setState({ quantity: e.target.value });
+  };
+  handleProvider = (e) => {
+    this.setState({ stockProvider: e.target.value });
+  };
+  handleBarCode = (e) => {
+    this.setState({ barCode: e.target.value });
   };
   handleSnackbar = () => {
     var bar = document.getElementById("snackbar");
     bar.className = "show";
-    setTimeout(function() {
+    setTimeout(function () {
       bar.className = bar.className.replace("show", "");
     }, 3000);
+  };
+
+  handleonCellValueChanged = (event) => {
+    console.log("Data after change is", event.data);
   };
 
   render() {
@@ -93,7 +170,7 @@ class Inventory extends Component {
       if (products.length === 0) {
         return <React.Fragment>{products} </React.Fragment>;
       } else {
-        return products.map(product => (
+        return products.map((product) => (
           <Product {...product} onEditProduct={this.handleEditProduct} />
         ));
       }
@@ -103,7 +180,43 @@ class Inventory extends Component {
       <div>
         <Header />
 
-        <div className="container">
+        <div className="mainDiv">
+          <a
+            className="btn btn-success "
+            onClick={() => this.setState({ productFormModal: true })}
+          >
+            <i className="glyphicon glyphicon-plus" /> Add New Item
+          </a>
+          <div
+            className="ag-theme-alpine"
+            style={{
+              height: "550px",
+              width: "900px",
+            }}
+          >
+            <AgGridReact
+              columnDefs={this.state.columnDefs}
+              rowData={this.state.products}
+              animateRows
+              showToolPanel="true"
+              enableSorting="true"
+              editType="fullRow"
+              onCellValueChanged={this.handleonCellValueChanged}
+              defaultColDef={{
+                sortable: true,
+                filter: true,
+                flex: 1,
+                resizable: true,
+                editable: true,
+                headerComponentFramework: SortableHeaderComponent,
+                headerComponentParams: {
+                  menuIcon: "fa-bars",
+                },
+              }}
+            ></AgGridReact>
+          </div>
+        </div>
+        {/* <div className="container">
           <a
             className="btn btn-success pull-right"
             onClick={() => this.setState({ productFormModal: true })}
@@ -122,9 +235,9 @@ class Inventory extends Component {
                 <th />
               </tr>
             </thead>
-            <tbody>{renderProducts()}</tbody>
+            { <tbody>{renderProducts()}</tbody> }
           </table>
-        </div>
+        </div> */}
 
         <Modal show={this.state.productFormModal}>
           <Modal.Header>
@@ -133,7 +246,7 @@ class Inventory extends Component {
           <Modal.Body>
             <form className="form-horizontal" name="newProductForm">
               <div className="form-group">
-                <label className="col-md-4 control-label" for="barcode">
+                <label className="col-md-4 control-label" htmlFor="barcode">
                   Barcode
                 </label>
                 <div className="col-md-4">
@@ -142,11 +255,12 @@ class Inventory extends Component {
                     name="barcode"
                     placeholder="Barcode"
                     className="form-control"
+                    onChange={this.handleBarCode}
                   />
                 </div>
               </div>
               <div className="form-group">
-                <label className="col-md-4 control-label" for="name">
+                <label className="col-md-4 control-label" htmlFor="name">
                   Name
                 </label>
                 <div className="col-md-4">
@@ -159,7 +273,7 @@ class Inventory extends Component {
                 </div>
               </div>
               <div className="form-group">
-                <label className="col-md-4 control-label" for="price">
+                <label className="col-md-4 control-label" htmlFor="price">
                   Price
                 </label>
                 <div className="col-md-4">
@@ -175,11 +289,15 @@ class Inventory extends Component {
                 </div>
               </div>
               <div className="form-group">
-                <label className="col-md-4 control-label" for="quantity_on_hand">
+                <label
+                  className="col-md-4 control-label"
+                  htmlFor="quantity_on_hand"
+                >
                   Quantity On Hand
                 </label>
                 <div className="col-md-4">
                   <input
+                    type="number"
                     name="quantity_on_hand"
                     placeholder="Quantity On Hand"
                     onChange={this.handleQuantity}
@@ -188,11 +306,19 @@ class Inventory extends Component {
                 </div>
               </div>
               <div className="form-group">
-                <label className="col-md-4 control-label" for="image">
-                  Upload Image
+                <label
+                  className="col-md-4 control-label"
+                  htmlFor="stock_provider"
+                >
+                  Company/Distributer
                 </label>
                 <div className="col-md-4">
-                  <input type="file" name="image" />
+                  <input
+                    name="stock_provider"
+                    placeholder="Company or Distributer"
+                    onChange={this.handleProvider}
+                    className="form-control"
+                  />
                 </div>
               </div>
               <br /> <br /> <br />

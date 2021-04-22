@@ -16,8 +16,15 @@ class Transactions extends Component {
   componentWillMount() {
     axios
       .get(url)
-      .then(response => this.setState({ transactions: response.data }))
-      .catch(err => {
+      .then((response) => {
+        let data = response.data.sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
+        this.setState({ transactions: data }, () =>
+          console.log("got state: ", this.state)
+        );
+      })
+      .catch((err) => {
         console.log(err);
       });
   }
@@ -28,8 +35,8 @@ class Transactions extends Component {
       if (transactions.length === 0) {
         return <p>No Transactions found</p>;
       } else {
-        return transactions.map(transaction => (
-          <CompleteTransactions {...transaction} />
+        return transactions.map((transaction, i) => (
+          <CompleteTransactions key={i} {...transaction} />
         ));
       }
     };
@@ -37,16 +44,13 @@ class Transactions extends Component {
     return (
       <div>
         <Header />
-        <br />
-        <br />
-
-        <table className="table table-hover table-striped">
+        <table className=" table-striped fixed_header">
           <thead>
             <tr>
-              <th>Time</th>
-              <th>Total</th>
-              <th>Products</th>
-              <th>Open</th>
+              <th className="time">Time</th>
+              <th className="total">Total</th>
+              <th className="products">Products</th>
+              <th className="open">Open</th>
             </tr>
           </thead>
           <tbody>{rendertransactions()}</tbody>

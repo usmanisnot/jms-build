@@ -12,35 +12,35 @@ module.exports = app;
 // Create Database
 var Transactions = new Datastore({
   filename: "./server/databases/transactions.db",
-  autoload: true
+  autoload: true,
 });
 
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
   res.send("Transactions API");
 });
 
 // GET all transactions
-app.get("/all", function(req, res) {
-  Transactions.find({}, function(err, docs) {
+app.get("/all", function (req, res) {
+  Transactions.find({}, function (err, docs) {
     res.send(docs);
   });
 });
 
 // GET all transactions
-app.get("/limit", function(req, res) {
+app.get("/limit", function (req, res) {
   var limit = parseInt(req.query.limit, 10);
   if (!limit) limit = 5;
 
   Transactions.find({})
     .limit(limit)
     .sort({ date: -1 })
-    .exec(function(err, docs) {
+    .exec(function (err, docs) {
       res.send(docs);
     });
 });
 
 // GET total sales for the current day
-app.get("/day-total", function(req, res) {
+app.get("/day-total", function (req, res) {
   // if date is provided
   if (req.query.date) {
     startDate = new Date(req.query.date);
@@ -60,13 +60,13 @@ app.get("/day-total", function(req, res) {
 
   Transactions.find(
     { date: { $gte: startDate.toJSON(), $lte: endDate.toJSON() } },
-    function(err, docs) {
+    function (err, docs) {
       var result = {
-        date: startDate
+        date: startDate,
       };
 
       if (docs) {
-        var total = docs.reduce(function(p, c) {
+        var total = docs.reduce(function (p, c) {
           return p + c.total;
         }, 0.0);
 
@@ -82,7 +82,7 @@ app.get("/day-total", function(req, res) {
 });
 
 // GET transactions for a particular date
-app.get("/by-date", function(req, res) {
+app.get("/by-date", function (req, res) {
   var startDate = new Date();
   startDate.setHours(0, 0, 0, 0);
 
@@ -91,28 +91,28 @@ app.get("/by-date", function(req, res) {
 
   Transactions.find(
     { date: { $gte: startDate.toJSON(), $lte: endDate.toJSON() } },
-    function(err, docs) {
+    function (err, docs) {
       if (docs) res.send(docs);
     }
   );
 });
 
 // Add new transaction
-app.post("/new", function(req, res) {
+app.post("/new", function (req, res) {
   var newTransaction = req.body;
 
-  Transactions.insert(newTransaction, function(err, transaction) {
+  Transactions.insert(newTransaction, function (err, transaction) {
     if (err) res.status(500).send(err);
     else {
       res.sendStatus(200);
-      Inventory.decrementInventory(transaction.products);
+      Inventory.decrementInventory(transaction.items);
     }
   });
 });
 
 // GET a single transaction
-app.get("/:transactionId", function(req, res) {
-  Transactions.find({ _id: req.params.transactionId }, function(err, doc) {
+app.get("/:transactionId", function (req, res) {
+  Transactions.find({ _id: req.params.transactionId }, function (err, doc) {
     if (doc) res.send(doc[0]);
   });
 });
