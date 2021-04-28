@@ -2,7 +2,8 @@
   "name": "react-pos",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://usmanisnot.github.io/jms/react-pos/public",
+  "homepage": ".",
+  "proxy": "http://localhost:8001/",
   "dependencies": {
     "ag-grid-community": "^23.2.1",
     "ag-grid-react": "^23.2.1",

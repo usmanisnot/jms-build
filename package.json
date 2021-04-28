@@ -1,14 +1,15 @@
 {
-  "homepage": "https://github.com/usmanisnot/jms/blob/master/react-pos/public/index.html",
+  "homepage": ".",
   "name": "server",
   "version": "1.0.0",
   "description": "Node.js application that connects the react-pos app to database",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
     "prepublish": "npm run build",
-    "publish": "gh-pages -d react-pos/build"
+    "publish": "gh-pages -d react-pos/build",
+	"start": "node index.js",
+    "build": "cd react-pos && npm install && npm run build"
   },
   "author": "Krissanawat",
   "license": "MIT",

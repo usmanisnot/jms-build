@@ -160,7 +160,7 @@ class Inventory extends Component {
   };
 
   handleonCellValueChanged = (event) => {
-    console.log("Data after change is", event.data);
+    this.handleEditProduct(event.data);
   };
 
   render() {
@@ -249,7 +249,7 @@ class Inventory extends Component {
                 <label className="col-md-4 control-label" htmlFor="barcode">
                   Barcode
                 </label>
-                <div className="col-md-4">
+                <div className="col-md-12">
                   <input
                     id="barcode"
                     name="barcode"
@@ -263,7 +263,7 @@ class Inventory extends Component {
                 <label className="col-md-4 control-label" htmlFor="name">
                   Name
                 </label>
-                <div className="col-md-4">
+                <div className="col-md-12">
                   <input
                     name="name"
                     placeholder="Name"
@@ -276,7 +276,7 @@ class Inventory extends Component {
                 <label className="col-md-4 control-label" htmlFor="price">
                   Price
                 </label>
-                <div className="col-md-4">
+                <div className="col-md-12">
                   <input
                     name="price"
                     placeholder="Price"
@@ -290,12 +290,12 @@ class Inventory extends Component {
               </div>
               <div className="form-group">
                 <label
-                  className="col-md-4 control-label"
+                  className="col-md-8 control-label"
                   htmlFor="quantity_on_hand"
                 >
                   Quantity On Hand
                 </label>
-                <div className="col-md-4">
+                <div className="col-md-12">
                   <input
                     type="number"
                     name="quantity_on_hand"
@@ -307,12 +307,12 @@ class Inventory extends Component {
               </div>
               <div className="form-group">
                 <label
-                  className="col-md-4 control-label"
+                  className="col-md-8 control-label"
                   htmlFor="stock_provider"
                 >
                   Company/Distributer
                 </label>
-                <div className="col-md-4">
+                <div className="col-md-12">
                   <input
                     name="stock_provider"
                     placeholder="Company or Distributer"

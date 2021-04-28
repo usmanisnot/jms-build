@@ -5,6 +5,10 @@ var express = require("express"),
   bodyParser = require("body-parser"),
   io = require("socket.io")(server),
   liveCart = [];
+const path = require("path");
+
+// Have Node serve the files for our built React app
+app.use(express.static(path.resolve(__dirname, "../jms-build/react-pos/build")));
 
 const PORT = process.env.PORT || 8001;
 
