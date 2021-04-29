@@ -1,5 +1,5 @@
 {
-  "homepage": ".",
+  "homepage": "https://yes-traders.herokuapp.com/",
   "name": "server",
   "version": "1.0.0",
   "description": "Node.js application that connects the react-pos app to database",
