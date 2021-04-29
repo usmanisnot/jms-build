@@ -8,7 +8,9 @@ var express = require("express"),
 const path = require("path");
 
 // Have Node serve the files for our built React app
-app.use(express.static(path.resolve(__dirname, "../jms-build/react-pos/build")));
+app.use(
+  express.static(path.resolve(__dirname, "../jms-build/react-pos/build"))
+);
 
 const PORT = process.env.PORT || 8001;
 
@@ -17,7 +19,7 @@ console.log("Server started");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.all("/*", function(req, res, next) {
+app.all("/*", function (req, res, next) {
   // CORS headers
   res.header("Access-Control-Allow-Origin", "*"); // restrict it to the required domain
   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
@@ -33,21 +35,21 @@ app.all("/*", function(req, res, next) {
   }
 });
 
-app.get("/", function(req, res) {
-  res.send(" Real time POS web app running.");
-});
+// app.get("/", function(req, res) {
+//   res.send(" Real time POS web app running.");
+// });
 
 app.use("/api/inventory", require("./api/inventory"));
 app.use("/api", require("./api/transactions"));
 
 // Websocket logic for Live Cart
-io.on("connection", function(socket) {
-  socket.on("cart-transaction-complete", function() {
+io.on("connection", function (socket) {
+  socket.on("cart-transaction-complete", function () {
     socket.broadcast.emit("update-live-cart-display", {});
   });
 
   // upon page load, give user current cart
-  socket.on("live-cart-page-loaded", function() {
+  socket.on("live-cart-page-loaded", function () {
     socket.emit("update-live-cart-display", liveCart);
   });
 
@@ -55,7 +57,7 @@ io.on("connection", function(socket) {
   socket.emit("update-live-cart-display", liveCart);
 
   // when the cart data is updated by the POS
-  socket.on("update-live-cart", function(cartData) {
+  socket.on("update-live-cart", function (cartData) {
     // keep track of it
     liveCart = cartData;
 
