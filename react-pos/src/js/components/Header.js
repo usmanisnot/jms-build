@@ -22,6 +22,9 @@ const Header = () => (
       <li className="lead">
         <Link to="/livecart">LiveCart</Link>
       </li>
+      <li className="lead">
+        <Link to="/receipt">Slip</Link>
+      </li>
     </ul>
   </div>
 );

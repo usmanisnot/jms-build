@@ -13,11 +13,10 @@ class PosItem extends Component {
     this.props.onChange(id, itemNumber);
   };
   handleChangeQuantity = (id, e) => {
-    console.log("handleChangeQuantity: ", id, e);
     this.props.onChange(id, e.target.value);
   };
   render() {
-    const { id, name, price, quantity, quantity_on_hand } = this.props;
+    const { id, name, unitPrice, quantity, quantity_on_hand } = this.props;
     var itemNumber = quantity;
     return (
       <tr>
@@ -27,7 +26,7 @@ class PosItem extends Component {
         </td>
         <td className="unitPrice" defaultValue="0.00">
           {" "}
-          {price}{" "}
+          {unitPrice}{" "}
         </td>
         <td className="quantity">
           {/* <button
@@ -57,7 +56,7 @@ class PosItem extends Component {
         <td className="quantityAvailable">{quantity_on_hand}</td>
         <td className="tax">0.00</td>
         <td defaultValue="0.00" className="col-md-2 total">
-          {price}
+          {unitPrice * quantity}
         </td>
         <td defaultValue="0.00" className="delete">
           <button

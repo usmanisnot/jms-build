@@ -10,6 +10,7 @@ import ProductsDropdown from "./ProductsDropdown";
 import SearchBar from "./searchBar";
 import Checkout from "../Checkout";
 import htmlToImage from "html-to-image";
+import { Redirect } from "react-router-dom";
 
 const HOST = "http://localhost:8001";
 let socket = io.connect(HOST);
@@ -66,7 +67,6 @@ class Pos extends Component {
     const currentItem = {
       id: this.state.id,
       name: this.state.name,
-      price: this.state.price,
       unitPrice: this.state.unitPrice,
       quantity: this.state.quantity,
     };
@@ -121,7 +121,7 @@ class Pos extends Component {
       parseInt(this.state.total, 10) - parseInt(this.state.totalPayment, 10);
     if (this.state.total <= this.state.totalPayment) {
       this.setState({ changeDue: amountDiff, receiptModal: true, items: [] });
-      this.handleSaveToDB();
+      //this.handleSaveToDB();
       socket.emit("update-live-cart", []);
     } else {
       this.setState({ changeDue: amountDiff });
@@ -140,6 +140,7 @@ class Pos extends Component {
       for (var i = 0; i < items.length; i++) {
         if (items[i].id === id) {
           items[i].quantity = value;
+          items[i].quantity_on_hand = items[i].quantity_on_hand - 1;
           this.setState({ items: items });
         }
       }
@@ -151,7 +152,7 @@ class Pos extends Component {
     var items = this.state.items;
     var totalCost = 0;
     for (var i = 0; i < items.length; i++) {
-      var price = items[i].price * items[i].quantity;
+      var price = items[i].unitPrice * items[i].quantity;
       totalCost = parseInt(totalCost, 10) + parseInt(price, 10);
     }
     this.setState({ total: totalCost, totalPayment: totalCost });
@@ -195,7 +196,6 @@ class Pos extends Component {
     const currentItem = {
       id: "_billableItem_" + selectedProduct._id,
       name: selectedProduct.name,
-      price: selectedProduct.price,
       unitPrice: selectedProduct.price,
       quantity: 1,
       quantity_on_hand: selectedProduct.quantity - 1,
@@ -206,7 +206,8 @@ class Pos extends Component {
   };
 
   OpenPopup() {
-    window.open("./template.html", "_blank");
+    this.props.history.push("/receipt", this.getCurrentTransaction());
+    // window.open("./template.html", "_blank");
   }
 
   render() {
@@ -353,16 +354,23 @@ class Pos extends Component {
       if (items.length === 0) {
         return (
           <tr>
-            <td colSpan={7}>No products added</td>
+            <td className="name" defaultValue="">
+              No products added
+            </td>
+            <td className="unitPrice" defaultValue="">
+              {" "}
+            </td>
+            <td className="quantity"></td>
+            <td className="quantityAvailable"></td>
+            <td className="tax"></td>
+            <td defaultValue="" className="col-md-2 total"></td>
+            <td defaultValue="" className="delete"></td>
           </tr>
         );
       } else {
-        return items.map(
-          (item) => (
-            <PosItem key={item.id} {...item} onChange={this.handleChange} />
-          ),
-          this
-        );
+        return items.map((item) => (
+          <PosItem key={item.id} {...item} onChange={this.handleChange} />
+        ));
       }
     };
 

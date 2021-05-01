@@ -3,6 +3,7 @@ import { Modal, Button } from "react-bootstrap";
 import "./App.css";
 import TransactionDetail from "./TransactionDetail";
 import Moment from "react-moment";
+
 class CompleteTransactions extends Component {
   constructor(props) {
     super(props);
