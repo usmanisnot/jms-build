@@ -121,13 +121,12 @@ class Pos extends Component {
       parseInt(this.state.total, 10) - parseInt(this.state.totalPayment, 10);
     if (this.state.total <= this.state.totalPayment) {
       this.setState({ changeDue: amountDiff, receiptModal: true, items: [] });
-      //this.handleSaveToDB();
+      this.handleSaveToDB();
       socket.emit("update-live-cart", []);
     } else {
       this.setState({ changeDue: amountDiff });
       //this.setState({ amountDueModal: true });
     }
-    this.OpenPopup();
   };
   handleChange = (id, value) => {
     var items = this.state.items;
@@ -177,9 +176,15 @@ class Pos extends Component {
 
   handleSaveToDB = () => {
     const transaction = this.getCurrentTransaction();
-    axios.post(HOST + "/api/new", transaction).catch((err) => {
-      console.log(err);
-    });
+    axios
+      .post(HOST + "/api/new", transaction)
+      .then(this.successSaveToDb)
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  successSaveToDb = (response) => {
+    this.props.history.push("/receipt", this.getCurrentTransaction());
   };
   handleProductSelect = (item) => {
     console.log("item: ", item);
@@ -205,150 +210,8 @@ class Pos extends Component {
     this.updateTotal();
   };
 
-  OpenPopup() {
-    this.props.history.push("/receipt", this.getCurrentTransaction());
-    // window.open("./template.html", "_blank");
-  }
-
   render() {
     var { quantity, modal, items } = this.state;
-
-    var renderAmountDue = () => {
-      return (
-        <Modal show={this.state.amountDueModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Amount</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <h3>
-              Amount Due:
-              <span className="text-danger">{this.state.changeDue}</span>
-            </h3>
-            <p>Customer payment incomplete; Correct and Try again</p>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={() => this.setState({ amountDueModal: false })}>
-              close
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      );
-    };
-    var renderReceipt = () => {
-      return (
-        <div style={{ display: "none" }} id="recipt_mapped">
-          <div id="invoice-POS">
-            <center id="top">
-              <div className="logo"></div>
-              <div className="info">
-                <h2>Javed Medical Store</h2>
-                <p>
-                  Main bazar, Kot Samaba <br />
-                  Phone: 0300-6716165
-                </p>
-              </div>
-            </center>
-
-            <div id="mid-line">
-              <div style={{ color: "#fff" }}>____________________</div>
-            </div>
-
-            <div id="bot">
-              <div id="table">
-                <table>
-                  <tr className="tabletitle">
-                    <td className="item">
-                      <h2>Item</h2>
-                    </td>
-                    <td className="Hours">
-                      <h2>Qty</h2>
-                    </td>
-                    <td className="Rate">
-                      <h2>Sub Total</h2>
-                    </td>
-                  </tr>
-
-                  <tr className="service">
-                    <td className="tableitem">
-                      <p className="itemtext">panadol extra</p>
-                    </td>
-                    <td className="tableitem">
-                      <p className="itemtext">5</p>
-                    </td>
-                    <td className="tableitem">
-                      <p className="itemtext">30.00</p>
-                    </td>
-                  </tr>
-
-                  <tr className="service">
-                    <td className="tableitem">
-                      <p className="itemtext">Caflam 50mg</p>
-                    </td>
-                    <td className="tableitem">
-                      <p className="itemtext">3</p>
-                    </td>
-                    <td className="tableitem">
-                      <p className="itemtext">95.00</p>
-                    </td>
-                  </tr>
-
-                  <tr className="service">
-                    <td className="tableitem">
-                      <p className="itemtext">Nestle water large</p>
-                    </td>
-                    <td className="tableitem">
-                      <p className="itemtext">1</p>
-                    </td>
-                    <td className="tableitem">
-                      <p className="itemtext">70.00</p>
-                    </td>
-                  </tr>
-
-                  <tr className="service">
-                    <td className="tableitem">
-                      <p className="itemtext">Medicam medium</p>
-                    </td>
-                    <td className="tableitem">
-                      <p className="itemtext">1</p>
-                    </td>
-                    <td className="tableitem">
-                      <p className="itemtext">55.00</p>
-                    </td>
-                  </tr>
-
-                  <tr className="tabletitle">
-                    <td></td>
-                    <td className="Rate">
-                      <h2>tax</h2>
-                    </td>
-                    <td className="payment">
-                      <h2>RS: 0</h2>
-                    </td>
-                  </tr>
-
-                  <tr className="tabletitle">
-                    <td></td>
-                    <td className="Rate">
-                      <h2>Total</h2>
-                    </td>
-                    <td className="payment">
-                      <h2>RS: 250</h2>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-
-              <div id="legalcopy">
-                <p className="legal">
-                  <strong>Thank you for your business!</strong>  Errors and
-                  omissions excepted.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    };
 
     var renderLivePos = () => {
       if (items.length === 0) {
@@ -397,13 +260,12 @@ class Pos extends Component {
           </Form.Row>
 
           <Form.Group id="formGridProduct">
+            <Form.Label>Select Product</Form.Label>
             <ProductsDropdown onProductSelect={this.handleProductSelect} />
           </Form.Group>
 
           <Form.Group id="formGridProduct">
             <div className="">
-              {renderAmountDue()}
-              {renderReceipt()}
               <div className="">
                 <table className="table-striped fixed_header_pos">
                   <thead>
