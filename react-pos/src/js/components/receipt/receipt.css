@@ -1,123 +1,172 @@
-body {
-  margin-top: 20px;
-  color: #484b51;
+#invoice {
+  padding: 0px;
 }
-.text-secondary-d1 {
-  color: #728299 !important;
+
+.invoice {
+  position: relative;
+  background-color: #fff;
+  min-height: 680px;
+  padding: 15px;
 }
-.page-header {
-  margin: 0 0 1rem;
-  padding-bottom: 1rem;
-  padding-top: 0.5rem;
-  border-bottom: 1px dotted #e2e2e2;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  -ms-flex-align: center;
-  align-items: center;
+
+.invoice header {
+  padding: 10px 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #3989c6;
 }
-.page-title {
-  padding: 0;
+
+.invoice .company-details {
+  text-align: right;
+}
+
+.invoice .company-details .name {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.invoice .contacts {
+  margin-bottom: 20px;
+}
+
+.invoice .invoice-to {
+  text-align: left;
+}
+
+.invoice .invoice-to .to {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.invoice .invoice-details {
+  text-align: right;
+}
+
+.invoice .invoice-details .invoice-id {
+  margin-top: 0;
+  color: #3989c6;
+}
+
+.invoice main {
+  padding-bottom: 50px;
+}
+
+.invoice main .thanks {
+  margin-top: -100px;
+  font-size: 2em;
+  margin-bottom: 50px;
+}
+
+.invoice main .notices {
+  padding-left: 6px;
+  border-left: 6px solid #3989c6;
+}
+
+.invoice main .notices .notice {
+  font-size: 1.2em;
+}
+
+.invoice table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-bottom: 20px;
+}
+
+.invoice table td,
+.invoice table th {
+  padding: 15px;
+  background: #eee;
+  border-bottom: 1px solid #fff;
+}
+
+.invoice table th {
+  white-space: nowrap;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.invoice table td h3 {
   margin: 0;
-  font-size: 1.75rem;
-  font-weight: 300;
-}
-.brc-default-l1 {
-  border-color: #dce9f0 !important;
+  font-weight: 400;
+  color: #3989c6;
+  font-size: 1.2em;
 }
 
-.ml-n1,
-.mx-n1 {
-  margin-left: -0.25rem !important;
-}
-.mr-n1,
-.mx-n1 {
-  margin-right: -0.25rem !important;
-}
-.mb-4,
-.my-4 {
-  margin-bottom: 1.5rem !important;
+.invoice table .qty,
+.invoice table .total,
+.invoice table .unit {
+  text-align: right;
+  font-size: 1.2em;
 }
 
-hr {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  border: 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+.invoice table .no {
+  color: #fff;
+  font-size: 1.6em;
+  background: #3989c6;
 }
 
-.text-grey-m2 {
-  color: #888a8d !important;
+.invoice table .unit {
+  background: #ddd;
 }
 
-.text-success-m2 {
-  color: #86bd68 !important;
+.invoice table .total {
+  background: #3989c6;
+  color: #fff;
 }
 
-.font-bolder,
-.text-600 {
-  font-weight: 600 !important;
+.invoice table tbody tr:last-child td {
+  border: none;
 }
 
-.text-110 {
-  font-size: 110% !important;
-}
-.text-blue {
-  color: #478fcc !important;
-}
-.pb-25,
-.py-25 {
-  padding-bottom: 0.75rem !important;
-}
-
-.pt-25,
-.py-25 {
-  padding-top: 0.75rem !important;
-}
-.bgc-default-tp1 {
-  background-color: rgba(121, 169, 197, 0.92) !important;
-}
-.bgc-default-l4,
-.bgc-h-default-l4:hover {
-  background-color: #f3f8fa !important;
-}
-.page-header .page-tools {
-  -ms-flex-item-align: end;
-  align-self: flex-end;
+.invoice table tfoot td {
+  background: 0 0;
+  border-bottom: none;
+  white-space: nowrap;
+  text-align: right;
+  padding: 10px 20px;
+  font-size: 1.2em;
+  border-top: 1px solid #aaa;
 }
 
-.btn-light {
-  color: #757984;
-  background-color: #f5f6f9;
-  border-color: #dddfe4;
-}
-.w-2 {
-  width: 1rem;
+.invoice table tfoot tr:first-child td {
+  border-top: none;
 }
 
-.text-120 {
-  font-size: 120% !important;
-}
-.text-primary-m1 {
-  color: #4087d4 !important;
+.invoice table tfoot tr:last-child td {
+  color: #3989c6;
+  font-size: 1.4em;
+  border-top: 1px solid #3989c6;
 }
 
-.text-danger-m1 {
-  color: #dd4949 !important;
+.invoice table tfoot tr td:first-child {
+  border: none;
 }
-.text-blue-m2 {
-  color: #68a3d5 !important;
+
+.invoice footer {
+  width: 100%;
+  text-align: center;
+  color: #777;
+  border-top: 1px solid #aaa;
+  padding: 8px 0;
 }
-.text-150 {
-  font-size: 150% !important;
+
+@media print {
+  .invoice {
+    font-size: 11px !important;
+    overflow: hidden !important;
+  }
+
+  .invoice footer {
+    position: absolute;
+    bottom: 10px;
+    page-break-after: always;
+  }
+
+  .invoice > div:last-child {
+    page-break-before: always;
+  }
 }
-.text-60 {
-  font-size: 60% !important;
-}
-.text-grey-m1 {
-  color: #7b7d81 !important;
-}
-.align-bottom {
-  vertical-align: bottom !important;
+
+.hidden {
+  display: none;
 }

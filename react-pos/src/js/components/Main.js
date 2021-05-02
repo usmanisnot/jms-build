@@ -12,7 +12,10 @@ const Main = () => (
       <Switch>
         <Route exact path="/" render={(props) => <Pos {...props} />} />
         <Route path="/inventory" component={Inventory} />
-        <Route path="/transactions" component={Transactions} />
+        <Route
+          path="/transactions"
+          render={(props) => <Transactions {...props} />}
+        />
         <Route path="/livecart" component={LiveCart} />
         <Route path="/receipt" component={Slip} />
       </Switch>

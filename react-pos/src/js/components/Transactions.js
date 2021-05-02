@@ -36,7 +36,7 @@ class Transactions extends Component {
         return <p>No Transactions found</p>;
       } else {
         return transactions.map((transaction, i) => (
-          <CompleteTransactions key={i} {...transaction} />
+          <CompleteTransactions key={i} {...transaction} {...this.props} />
         ));
       }
     };
@@ -44,13 +44,14 @@ class Transactions extends Component {
     return (
       <div>
         <Header />
+
         <table className=" table-striped fixed_header">
           <thead>
             <tr>
               <th className="time">Time</th>
               <th className="total">Total</th>
               <th className="products">Products</th>
-              <th className="open">Open</th>
+              <th className="open"></th>
             </tr>
           </thead>
           <tbody>{rendertransactions()}</tbody>

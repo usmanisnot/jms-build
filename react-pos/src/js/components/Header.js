@@ -5,24 +5,24 @@ import { Link } from "react-router-dom";
 // between routes.
 const Header = () => (
   <div className="text-center">
-    <h1>
-      <a href="/#/">JMS Point of Sale System</a>
-    </h1>
+    <div style={{ backgroundColor: "red" }}>
+      <h2 style={{ color: "white" }}>YES Point of Sale System</h2>
+    </div>
 
     <ul className="nav-menu">
       <li className="lead">
         <Link to="/inventory">Inventory</Link>
       </li>
       <li className="lead">
-        <Link to="/">POS</Link>
+        <Link to="/">New Order</Link>
       </li>
       <li className="lead">
-        <Link to="/transactions">Transactions</Link>
+        <Link to="/transactions">Orders</Link>
       </li>
-      <li className="lead">
+      <li style={{ display: "none" }} className="lead">
         <Link to="/livecart">LiveCart</Link>
       </li>
-      <li className="lead">
+      <li style={{ display: "none" }} className="lead">
         <Link to="/receipt">Slip</Link>
       </li>
     </ul>

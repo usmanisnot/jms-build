@@ -14,6 +14,16 @@ class CompleteTransactions extends Component {
     };
   }
 
+  getTransaction() {
+    return {
+      date: this.props.date,
+      total: this.props.total,
+      items: this.props.items,
+      totalPayment: this.props.totalPayment,
+      customer: this.props.customer,
+    };
+  }
+
   render() {
     var { date, total, items, totalPayment, customer } = this.props;
     var renderQuantity = (items) => {
@@ -28,7 +38,6 @@ class CompleteTransactions extends Component {
     var renderItemDetails = (items) => {
       return items.map((item, i) => <TransactionDetail key={i} {...item} />);
     };
-
     return (
       <tr>
         <td className="time">
@@ -41,12 +50,21 @@ class CompleteTransactions extends Component {
         <td className="products"> {renderQuantity(items)} </td>
         <td className="open">
           <a
-            className="btn btn-info"
+            className="btn btn-info hidden"
             onClick={() => this.setState({ transactionModal: true })}
           >
             Details
             <i className="glyphicon glyphicon-new-window" />
           </a>
+
+          <button
+            className="btn btn-primary"
+            onClick={() =>
+              this.props.history.push("/receipt", this.getTransaction())
+            }
+          >
+            View Details
+          </button>
         </td>
 
         <Modal show={this.state.transactionModal} size="lg">

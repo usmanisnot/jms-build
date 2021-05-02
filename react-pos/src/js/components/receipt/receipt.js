@@ -3,176 +3,113 @@ import ReactToPrint from "react-to-print";
 import Moment from "react-moment";
 import "./receipt.css";
 
-const thStyle = {
-  fontFamily: "Anton",
-  fontWeight: "normal",
-  fontStyle: "normal",
-};
-
 class ComponentToPrint extends React.Component {
   renderItems() {
     var { items } = this.props;
     return items.map((item, i) => (
-      <div class="row mb-2 mb-sm-0 py-25 bgc-default-l4">
-        <div class="d-none d-sm-block col-1">{i}</div>
-        <div class="col-9 col-sm-5">{item.barCode + " - " + item.name}</div>
-        <div class="d-none d-sm-block col-2">{item.quantity}</div>
-        <div class="d-none d-sm-block col-2 text-95">Rs: {item.unitPrice}</div>
-        <div class="col-2 text-secondary-d2">
-          Rs {item.unitPrice * item.quantity}
-        </div>
-      </div>
+      <tr key={i}>
+        <td className="no">{++i}</td>
+        <td className="text-left">
+          <h3>{item.barCode + " - " + item.name}</h3>
+        </td>
+        <td className="unit">Rs: {item.unitPrice}</td>
+        <td className="qty">{item.quantity}</td>
+        <td className="total">Rs {item.unitPrice * item.quantity}</td>
+      </tr>
     ));
   }
   render() {
-    var { date, customer } = this.props;
-    var forDate = new Date(date);
+    var { date, customer, total, totalPayment } = this.props;
+    var forDate = date == undefined ? new Date() : new Date(date);
+    console.log("date for: ", date);
     return (
-      <div id="bot">
-        <link
-          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-          rel="stylesheet"
-        />
-
-        <div className="page-content container">
-          {/* <div className="page-header text-blue-d2">
-            <h1 className="page-title text-secondary-d1">
-              Invoice
-              <small className="page-info">
-                <i className="fa fa-angle-double-right text-80"></i>
-                ID: #{forDate.valueOf()}
-              </small>
-            </h1>
-
-            <div className="page-tools">
-              <div className="action-buttons">
-                <a
-                  className="btn bg-white btn-light mx-1px text-95"
-                  href="#"
-                  data-title="Print"
-                >
-                  <i className="mr-1 fa fa-print text-primary-m1 text-120 w-2"></i>
-                  Print
-                </a>
-                <a
-                  className="btn bg-white btn-light mx-1px text-95"
-                  href="#"
-                  data-title="PDF"
-                >
-                  <i className="mr-1 fa fa-file-pdf-o text-danger-m1 text-120 w-2"></i>
-                  Export
-                </a>
+      <div id="invoice">
+        <div className="invoice overflow-auto">
+          <div style={{ minWidth: 600 }}>
+            <header>
+              <div className="row">
+                <div className="col"></div>
+                <div className="col company-details">
+                  <h2 className="name">Yes Traders</h2>
+                  <div>455 Foggy Heights, AZ 85004, US</div>
+                  <div>(123) 456-789</div>
+                  <div>company@example.com</div>
+                </div>
               </div>
-            </div>
-          </div> */}
-
-          <div className="container px-0">
-            <div className="row mt-4">
-              <div className="col-12 col-lg-10 offset-lg-1">
-                <div className="row">
-                  <div className="col-12">
-                    <div className="text-center text-150">
-                      <h3 className="text-default-d3">Yes Traders</h3>
-                    </div>
-                  </div>
+            </header>
+            <main>
+              <div className="row contacts">
+                <div className="col invoice-to">
+                  <div className="text-gray-light">INVOICE TO:</div>
+                  <h2 className="to"> {customer && customer.name}</h2>
+                  <div className="address">{customer && customer.address}</div>
+                  <div className="email"></div>
                 </div>
-
-                <hr className="row brc-default-l1 mx-n1 mb-4" />
-
-                <div className="row">
-                  <div className="col-sm-6">
-                    <div>
-                      <span className="text-sm text-grey-m2 align-middle">
-                        To:
-                      </span>
-                      <span className="text-600 text-110 text-blue align-middle">
-                        {customer && customer.name}
-                      </span>
-                    </div>
-                    <div className="text-grey-m2">
-                      <div className="my-1">{customer && customer.address}</div>
-                      {/* <div className="my-1">State, Country</div> */}
-                    </div>
+                <div className="col invoice-details">
+                  <h1 className="invoice-id">INVOICE# {forDate.valueOf()}</h1>
+                  <div className="date">
+                    Date of Invoice:{" "}
+                    <Moment local format="MMM D, YYYY">
+                      {date}
+                    </Moment>
                   </div>
-
-                  <div className="text-95 col-sm-6 align-self-start d-sm-flex justify-content-end">
-                    <hr className="d-sm-none" />
-                    <div className="text-grey-m2">
-                      <div className="mt-1 mb-2 text-secondary-m1 text-600 text-125">
-                        Invoice
-                      </div>
-
-                      <div className="my-2">
-                        <i className="fa fa-circle text-blue-m2 text-xs mr-1"></i>{" "}
-                        <span className="text-600 text-90">ID:</span> #111-222
-                      </div>
-
-                      <div className="my-2">
-                        <i className="fa fa-circle text-blue-m2 text-xs mr-1"></i>{" "}
-                        <span className="text-600 text-90">Issue Date:</span>{" "}
-                        <Moment local format="MMM D, YYYY">
-                          {date}
-                        </Moment>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-4">
-                  <div class="row text-600 text-white bgc-default-tp1 py-25">
-                    <div class="d-none d-sm-block col-1">#</div>
-                    <div class="col-9 col-sm-5">Description</div>
-                    <div class="d-none d-sm-block col-4 col-sm-2">Qty</div>
-                    <div class="d-none d-sm-block col-sm-2">Unit Price</div>
-                    <div class="col-2">Amount</div>
-                  </div>
-                  <div class="text-95 text-secondary-d3">
-                    {this.renderItems()}
-                  </div>
-                  <div className="row mt-3">
-                    <div className="col-12 col-sm-7 text-grey-d2 text-95 mt-2 mt-lg-0"></div>
-
-                    <div className="col-12 col-sm-5 text-grey text-90 order-first order-sm-last pull-right">
-                      <div className="row my-2">
-                        <div className="col-7 text-right">SubTotal</div>
-                        <div className="col-5">
-                          <span className="text-120 text-secondary-d1">
-                            Rs 2,250
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="row my-2">
-                        <div className="col-7 text-right">Tax (10%)</div>
-                        <div className="col-5">
-                          <span className="text-110 text-secondary-d1">
-                            225
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="row my-2 align-items-center bgc-primary-l3 p-2">
-                        <div className="col-7 text-right">Total Amount</div>
-                        <div className="col-5">
-                          <span className="text-150 text-success-d3 opacity-2">
-                            Rs: 2,475
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <hr />
-
-                  <div>
-                    <span className="text-secondary-d1 text-105">
-                      Thank you for your business
-                    </span>
+                  <div className="date hidden">
+                    Due Date:{" "}
+                    <Moment local format="MMM D, YYYY">
+                      {date}
+                    </Moment>
                   </div>
                 </div>
               </div>
-            </div>
+              <table border="0" cellspacing="0" cellpadding="0">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th className="text-left">DESCRIPTION</th>
+                    <th className="text-right">UNIT PRICE</th>
+                    <th className="text-right">QUANTITY</th>
+                    <th className="text-right">TOTAL</th>
+                  </tr>
+                </thead>
+                <tbody>{this.renderItems()}</tbody>
+                <tfoot>
+                  <tr className="hidden">
+                    <td colSpan="2"></td>
+                    <td colSpan="2">SUBTOTAL</td>
+                    <td> Rs {total}</td>
+                  </tr>
+                  <tr className="hidden">
+                    <td colSpan="2"></td>
+                    <td colSpan="2">TAX 0%</td>
+                    <td>RS 00.00</td>
+                  </tr>
+                  <tr>
+                    <td colSpan="2"></td>
+                    <td colSpan="2">GRAND TOTAL</td>
+                    <td> Rs {total}</td>
+                  </tr>
+                  <tr>
+                    <td colSpan="2"></td>
+                    <td colSpan="2">TOTAL PAID</td>
+                    <td> Rs {totalPayment}</td>
+                  </tr>
+                </tfoot>
+              </table>
+              <div className="thanks">Thank you!</div>
+              <div className="notices">
+                <div>NOTICE:</div>
+                <div className="notice">
+                  A finance charge of 1.5% will be made on unpaid balances after
+                  30 days.
+                </div>
+              </div>
+            </main>
+            <footer>
+              Invoice was created on a computer and is valid without the
+              signature and seal.
+            </footer>
           </div>
+          <div></div>
         </div>
       </div>
     );
@@ -188,17 +125,15 @@ class Slip extends React.Component {
   render() {
     return (
       <div>
+        <button
+          className="btn btn-danger"
+          style={{ margin: 10 }}
+          onClick={() => this.props.history.goBack()}
+        >
+          Back
+        </button>
         <ReactToPrint
-          trigger={() => (
-            <a
-              className="btn bg-white btn-light mx-1px text-95"
-              href="#"
-              data-title="Print"
-            >
-              <i className="mr-1 fa fa-print text-primary-m1 text-120 w-2"></i>
-              Print
-            </a>
-          )}
+          trigger={() => <button className="btn btn-primary">Print</button>}
           content={() => this.componentRef}
         />
         <ComponentToPrint

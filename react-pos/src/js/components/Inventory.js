@@ -8,6 +8,7 @@ import { Modal, Button } from "react-bootstrap";
 import { AgGridReact, SortableHeaderComponent } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
+import productButtonRender from "./productButtonRender";
 
 const HOST = "http://localhost:8001";
 
@@ -181,12 +182,6 @@ class Inventory extends Component {
         <Header />
 
         <div className="mainDiv">
-          <a
-            className="btn btn-success "
-            onClick={() => this.setState({ productFormModal: true })}
-          >
-            <i className="glyphicon glyphicon-plus" /> Add New Item
-          </a>
           <div
             className="ag-theme-alpine"
             style={{
@@ -194,6 +189,12 @@ class Inventory extends Component {
               width: "900px",
             }}
           >
+            <input
+              type="button"
+              className="btn btn-success"
+              value="Add new"
+              onClick={() => this.setState({ productFormModal: true })}
+            />
             <AgGridReact
               columnDefs={this.state.columnDefs}
               rowData={this.state.products}
