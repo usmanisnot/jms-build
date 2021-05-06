@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 // between routes.
 const Header = () => (
   <div className="text-center">
-    <div style={{ backgroundColor: "red" }}>
-      <h2 style={{ color: "white" }}>YES Point of Sale System</h2>
+    <div style={{ backgroundColor: "#ee3837" }}>
+      <h2 style={{ color: "white" }}>Yousaf Traders</h2>
     </div>
 
     <ul className="nav-menu">

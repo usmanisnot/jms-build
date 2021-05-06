@@ -1,7 +1,10 @@
 import React from "react";
 import ReactToPrint from "react-to-print";
 import Moment from "react-moment";
+import axios from "axios";
 import "./receipt.css";
+
+const HOST = "http://localhost:8001";
 
 class ComponentToPrint extends React.Component {
   renderItems() {
@@ -30,10 +33,12 @@ class ComponentToPrint extends React.Component {
               <div className="row">
                 <div className="col"></div>
                 <div className="col company-details">
-                  <h2 className="name">Yes Traders</h2>
-                  <div>455 Foggy Heights, AZ 85004, US</div>
-                  <div>(123) 456-789</div>
-                  <div>company@example.com</div>
+                  <h2 className="name">Yousaf Traders</h2>
+                  <div>
+                    Shop # 1 Gujjar plaza near Amin park bund road Lahore.
+                  </div>
+                  <div>03217773126</div>
+                  <div>yes26@gmail.com</div>
                 </div>
               </div>
             </header>
@@ -43,11 +48,16 @@ class ComponentToPrint extends React.Component {
                   <div className="text-gray-light">INVOICE TO:</div>
                   <h2 className="to"> {customer && customer.name}</h2>
                   <div className="address">{customer && customer.address}</div>
-                  <div className="email"></div>
+                  <div className="phone">{customer && customer.phone}</div>
                 </div>
                 <div className="col invoice-details">
-                  <h1 className="invoice-id">INVOICE# {forDate.valueOf()}</h1>
-                  <div className="date">
+                  <h1 className="invoice-id">
+                    INVOICE# {String(forDate.valueOf()).substring(4, 11)}
+                  </h1>
+                  <div
+                    style={{ fontWeight: "bold", fontStyle: "italic" }}
+                    className="date"
+                  >
                     Date of Invoice:{" "}
                     <Moment local format="MMM D, YYYY">
                       {date}
@@ -122,6 +132,17 @@ class Slip extends React.Component {
     this.state = props.location.state;
     console.log("this.state: ", this.state);
   }
+  delete = () => {
+    axios
+      .delete(HOST + "/api?transactionId=" + this.state._id)
+      .then(this.deleteSuccess)
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  deleteSuccess = (response) => {
+    console.log("response delet: ", response);
+  };
   render() {
     return (
       <div>
@@ -131,6 +152,13 @@ class Slip extends React.Component {
           onClick={() => this.props.history.goBack()}
         >
           Back
+        </button>
+        <button
+          className="btn btn-danger"
+          style={{ margin: 10 }}
+          onClick={() => this.delete}
+        >
+          Delete
         </button>
         <ReactToPrint
           trigger={() => <button className="btn btn-primary">Print</button>}

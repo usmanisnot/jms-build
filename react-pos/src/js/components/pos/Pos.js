@@ -35,7 +35,7 @@ class Pos extends Component {
         quantity: 1,
         quantity_on_hand: 0,
       },
-      customer: { name: "", address: "" },
+      customer: { name: "", address: "", phone: "" },
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleName = this.handleName.bind(this);
@@ -46,7 +46,7 @@ class Pos extends Component {
     this.handleProductAdd = this.handleProductAdd.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     var url = HOST + `/api/inventory/products`;
     axios.get(url).then((response) => {
       this.setState({ products: response.data }, () => {
@@ -106,6 +106,15 @@ class Pos extends Component {
       console.log("state updated ad:", this.state)
     );
   };
+
+  handleCustomerPhone = (e) => {
+    var updatedCustomer = { ...this.state.customer };
+    updatedCustomer.phone = e.target.value;
+    this.setState({ customer: updatedCustomer }, () =>
+      console.log("state updated ad:", this.state)
+    );
+  };
+
   handleName = (e) => {
     this.setState({ name: e.target.value });
   };
@@ -247,22 +256,33 @@ class Pos extends Component {
               <Form.Label>Customer Name</Form.Label>
               <Form.Control
                 onChange={this.handleCustomerName}
-                placeholder="enter customer name"
+                placeholder="Customer's Name"
               />
             </Form.Group>
             <Form.Group as={Col} controlId="formGridAddress1">
               <Form.Label>Address</Form.Label>
               <Form.Control
-                placeholder="1234 Main St"
+                placeholder="Address"
                 onChange={this.handleCustomerAddress}
               />
             </Form.Group>
           </Form.Row>
 
-          <Form.Group id="formGridProduct">
-            <Form.Label>Select Product</Form.Label>
-            <ProductsDropdown onProductSelect={this.handleProductSelect} />
-          </Form.Group>
+          <Form.Row>
+            <Form.Group as={Col} id="formGridProduct">
+              <Form.Label>Select Product</Form.Label>
+              <ProductsDropdown onProductSelect={this.handleProductSelect} />
+            </Form.Group>
+            <Form.Group as={Col} controlId="formGridCustomerPhone">
+              <Form.Label>Customer Phone</Form.Label>
+              <Form.Control
+                onChange={this.handleCustomerPhone}
+                placeholder="Customer's Phone"
+              />
+            </Form.Group>
+          </Form.Row>
+
+          <br />
 
           <Form.Group id="formGridProduct">
             <div className="">

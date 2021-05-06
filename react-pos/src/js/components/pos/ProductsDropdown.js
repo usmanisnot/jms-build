@@ -53,19 +53,7 @@ class ProductsDropdown extends Component {
     document.removeEventListener("keydown", this._handleKeyDown);
   }
 
-  componentDidMount() {
-    document.addEventListener("keydown", this._handleKeyDown);
-  }
-
-  // _handleKeyDown = (event) => {
-  //   switch (event.keyCode) {
-  //     case 32:
-  //       this.refs.serachIt.focus();
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // };
+  componentDidMount() {}
 
   onChangehandler = (selectValue) => {
     this.setState({ selectValue });
@@ -79,24 +67,16 @@ class ProductsDropdown extends Component {
 
   render() {
     return (
-      <div style={{ width: 474 }} className="s003">
-        <form>
-          <div className="inner-form">
-            <div className="input-field second-wrap">
-              <Select
-                options={this.state.options}
-                onChange={this.onChangehandler}
-                value={this.state.selectValue}
-                id="search"
-                placeholder="Search..."
-                className="selectComponenet"
-                onKeyPress={this.keyPressed}
-                styles={customStyles}
-              />
-            </div>
-          </div>
-        </form>
-      </div>
+      <Select
+        options={this.state.options}
+        onChange={this.onChangehandler}
+        value={this.state.selectValue}
+        id="search"
+        placeholder="Search..."
+        className="selectComponenet"
+        onKeyPress={this.keyPressed}
+        styles={customStyles}
+      />
     );
   }
 }

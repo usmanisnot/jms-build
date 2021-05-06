@@ -1,81 +1,101 @@
 body {
   font-size: 10px;
-  font-family:Calibri;
+  font-family: Calibri;
 }
 table {
   font-size: 10px;
-  font-family:Calibri;
+  font-family: Calibri;
 }
 
-#invoice-POS{
+#invoice-POS {
   box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5);
   /* padding:2mm; */
   padding: 2px;
   margin: 0 auto;
   width: 44mm;
-  background: #FFF;
+  background: #fff;
 }
-h1{
+h1 {
   font-size: 1.5em;
   color: #222;
 }
-h2{font-size: .9em;}
-h3{
+h2 {
+  font-size: 0.9em;
+}
+h3 {
   font-size: 1.2em;
   font-weight: 300;
   line-height: 2em;
 }
-p{
-  font-size: .7em;
+p {
+  font-size: 0.7em;
   color: #666;
   line-height: 1.2em;
 }
- 
-#top, #mid,#bot{
-  border-bottom: 1px solid #EEE;
-}
-#mid-line{border-bottom: 1px solid #EEE;}
 
-#top{min-height: 100px;}
-#mid{min-height: 80px;} 
-#bot{ min-height: 50px;}
-
-#top .logo{
-	height: 60px;
-	width: 60px;
-	background: url(download.png) no-repeat;
-	background-size: 60px 60px;
+#top,
+#mid,
+#bot {
+  border-bottom: 1px solid #eee;
 }
-.clientlogo{
+#mid-line {
+  border-bottom: 1px solid #eee;
+}
+
+#top {
+  min-height: 100px;
+}
+#mid {
+  min-height: 80px;
+}
+#bot {
+  min-height: 50px;
+}
+
+#top .logo {
+  height: 60px;
+  width: 60px;
+  background: url(download.png) no-repeat;
+  background-size: 60px 60px;
+}
+.clientlogo {
   float: left;
-	height: 60px;
-	width: 60px;
-	background: url(http://michaeltruong.ca/images/client.jpg) no-repeat;
-	background-size: 60px 60px;
+  height: 60px;
+  width: 60px;
+  background: url(http://michaeltruong.ca/images/client.jpg) no-repeat;
+  background-size: 60px 60px;
   border-radius: 50px;
 }
-.info{
+.info {
   display: block;
   margin-left: 0;
-  color:rgb(91, 187, 184);
+  color: rgb(91, 187, 184);
 }
-.title{
+.title {
   float: right;
 }
-.title p{text-align: right;} 
-table{
+.title p {
+  text-align: right;
+}
+table {
   width: 100%;
   border-collapse: collapse;
 }
-.tabletitle{
-  font-size: .5em;
-  background: #EEE;
+.tabletitle {
+  font-size: 0.5em;
+  background: #eee;
 }
-.service{border-bottom: 1px solid #EEE;}
-.item{width: 24mm;}
-.itemtext{font-size: .5em;}
+.service {
+  border-bottom: 1px solid #eee;
+}
+.item {
+  width: 24mm;
+}
+.itemtext {
+  font-size: 0.5em;
+}
 
-#legalcopy{
+#legalcopy {
   margin-top: 5mm;
 }
 
@@ -89,8 +109,8 @@ table{
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
 
 /* Modal Content/Box */
@@ -115,4 +135,18 @@ table{
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+
+::-webkit-input-placeholder {
+  /* Edge */
+  color: red;
+}
+
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: red;
+}
+
+::placeholder {
+  color: red;
 }

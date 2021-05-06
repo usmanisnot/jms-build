@@ -15,9 +15,9 @@ var Transactions = new Datastore({
   autoload: true,
 });
 
-app.get("/", function (req, res) {
-  res.send("Transactions API");
-});
+// app.get("/", function (req, res) {
+//   res.send("Transactions API");
+// });
 
 // GET all transactions
 app.get("/all", function (req, res) {
@@ -115,4 +115,16 @@ app.get("/:transactionId", function (req, res) {
   Transactions.find({ _id: req.params.transactionId }, function (err, doc) {
     if (doc) res.send(doc[0]);
   });
+});
+
+//delete product using product id
+app.delete("/:transactionId", function (req, res) {
+  console.log("delete called: ", req.params);
+  Transactions.remove(
+    { _id: req.params.transactionId },
+    function (err, numRemoved) {
+      if (err) res.status(500).send(err);
+      else res.sendStatus(200);
+    }
+  );
 });
