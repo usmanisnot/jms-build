@@ -115,7 +115,7 @@ class ComponentToPrint extends React.Component {
                   previousBalance > 0 ? "previousBalance" : "previousDue"
                 }
               >
-                Balance:{" "}
+                Balance (Rs):{" "}
                 <span style={{ marginLeft: "30px" }}>{previousBalance}</span>
               </div>
               <div className="thanks">Thank you!</div>
