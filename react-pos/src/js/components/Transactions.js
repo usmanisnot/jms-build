@@ -11,12 +11,11 @@ const HOST = "http://localhost:8001";
 class Transactions extends Component {
   constructor(props) {
     super(props);
-    this.state = { transactions: [], customers: [] };
+    this.state = { transactions: [], customers: [], query: "" };
   }
 
   componentDidMount = () => {
     this.setTransactions();
-    this.setCustomers();
   };
 
   deleteSuccess = () => {
@@ -38,18 +37,14 @@ class Transactions extends Component {
         console.log(err);
       });
   };
-  setCustomers = () => {
-    var url = HOST + `/api/customers/all`;
-    axios.get(url).then((response) => {
-      this.setState({ customers: response.data });
-    });
+
+  isDisplay = (item) => {
+    if (item.customer.name.toLowerCase().indexOf(this.state.query) >= 0) {
+      return true;
+    }
+    return false;
   };
-  getSearchableCustomers = () => {
-    return this.state.customers.map((item) => {
-      return { label: item.name, value: item.phone };
-    });
-  };
-  handleSelectCustomer = (option) => {};
+
   render() {
     var { transactions } = this.state;
 
@@ -62,6 +57,7 @@ class Transactions extends Component {
             key={i}
             {...transaction}
             {...this.props}
+            isDisplay={this.isDisplay(transaction)}
             deleteSuccess={this.deleteSuccess}
           />
         ));
@@ -72,23 +68,28 @@ class Transactions extends Component {
       <div>
         <Header />
 
-        <table className=" table-striped fixed_header">
-          <thead>
-            <tr>
-              <th className="time">
-                <Select
-                  options={this.getSearchableCustomers()}
-                  onChange={this.handleSelectCustomer}
-                />
-              </th>
-              <th className="total">Total</th>
-              <th className="balance">Balance</th>
-              <th className="products">Products</th>
-              <th className="open"></th>
-            </tr>
-          </thead>
-          <tbody>{rendertransactions()}</tbody>
-        </table>
+        <div className="content">
+          <table className=" table-striped fixed_header">
+            <thead>
+              <tr>
+                <th className="name">
+                  <input
+                    type="text"
+                    onChange={(e) =>
+                      this.setState({ query: e.target.value.toLowerCase() })
+                    }
+                  />
+                </th>
+                <th className="time">Time</th>
+                <th className="total">Total</th>
+                <th className="balance">Balance</th>
+                <th className="products">Products</th>
+                <th className="open"></th>
+              </tr>
+            </thead>
+            <tbody>{rendertransactions()}</tbody>
+          </table>
+        </div>
       </div>
     );
   }

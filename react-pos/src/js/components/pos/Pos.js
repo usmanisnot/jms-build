@@ -276,107 +276,112 @@ class Pos extends Component {
     return (
       <div>
         <Header />
+        <div className="mainDiv content">
+          <Form style={{ width: "50%" }}>
+            <Form.Row>
+              <Form.Group as={Col} controlId="formGridCustomerName">
+                <Form.Label>Customer Name</Form.Label>
+                <Creatable
+                  options={data}
+                  onChange={this.handleEditableSelectChange}
+                />
+              </Form.Group>
+              <Form.Group as={Col} controlId="formGridAddress1">
+                <Form.Label>Address</Form.Label>
+                <Form.Control
+                  placeholder="Address"
+                  onChange={this.handleCustomerAddress}
+                  value={this.state.customer.address}
+                />
+              </Form.Group>
+            </Form.Row>
 
-        <Form>
-          <Form.Row>
-            <Form.Group as={Col} controlId="formGridCustomerName">
-              <Form.Label>Customer Name</Form.Label>
-              <Creatable
-                options={data}
-                onChange={this.handleEditableSelectChange}
-              />
-            </Form.Group>
-            <Form.Group as={Col} controlId="formGridAddress1">
-              <Form.Label>Address</Form.Label>
-              <Form.Control
-                placeholder="Address"
-                onChange={this.handleCustomerAddress}
-                value={this.state.customer.address}
-              />
-            </Form.Group>
-          </Form.Row>
+            <Form.Row>
+              <Form.Group as={Col} id="formGridProduct">
+                <Form.Label>Select Product</Form.Label>
+                <ProductsDropdown onProductSelect={this.handleProductSelect} />
+              </Form.Group>
+              <Form.Group as={Col} controlId="formGridCustomerPhone">
+                <Form.Label>Customer Phone</Form.Label>
+                <Form.Control
+                  onChange={this.handleCustomerPhone}
+                  value={this.state.customer.phone}
+                  placeholder="Customer's Phone"
+                />
+              </Form.Group>
+            </Form.Row>
 
-          <Form.Row>
-            <Form.Group as={Col} id="formGridProduct">
-              <Form.Label>Select Product</Form.Label>
-              <ProductsDropdown onProductSelect={this.handleProductSelect} />
-            </Form.Group>
-            <Form.Group as={Col} controlId="formGridCustomerPhone">
-              <Form.Label>Customer Phone</Form.Label>
-              <Form.Control
-                onChange={this.handleCustomerPhone}
-                value={this.state.customer.phone}
-                placeholder="Customer's Phone"
-              />
-            </Form.Group>
-          </Form.Row>
+            <br />
 
-          <br />
-
-          <Form.Group id="formGridProduct">
-            <div className="">
+            <Form.Group id="formGridProduct">
               <div className="">
-                <table className="table-striped fixed_header_pos">
-                  <thead>
-                    <tr>
-                      <td colSpan="6" className="text-center"></td>
-                    </tr>
-                    <tr className="titles">
-                      <th className="name">Name</th>
-                      <th className="unitPrice">Unit Price</th>
-                      <th className="quantity">Quantity</th>
-                      <th className="quantityAvailable">Quantity available</th>
-                      <th className="tax">Tax</th>
-                      <th className="total">Total</th>
-                      <th className="delete"></th>
-                      <th />
-                    </tr>
-                  </thead>
-                  <tbody>{renderLivePos()}</tbody>
-                  <tfoot className="tableFoot">
-                    <tr>
-                      <td colSpan={3}>
-                        <span className="checkout-total-price">Total Bill</span>
-                      </td>
-                      <td colSpan={4}>
-                        <span
-                          style={{ float: "right" }}
-                          className="checkout-total-price"
-                        >
-                          {this.state.total}
-                        </span>
-                      </td>
-                    </tr>
-                  </tfoot>
-                </table>
+                <div className="">
+                  <table className="table-striped fixed_header_pos">
+                    <thead>
+                      <tr>
+                        <td colSpan="6" className="text-center"></td>
+                      </tr>
+                      <tr className="titles">
+                        <th className="name">Name</th>
+                        <th className="unitPrice">Unit Price</th>
+                        <th className="quantity">Quantity</th>
+                        <th className="quantityAvailable">
+                          Quantity available
+                        </th>
+                        <th className="tax">Tax</th>
+                        <th className="total">Total</th>
+                        <th className="delete"></th>
+                        <th />
+                      </tr>
+                    </thead>
+                    <tbody>{renderLivePos()}</tbody>
+                    <tfoot className="tableFoot">
+                      <tr>
+                        <td colSpan={3}>
+                          <span className="checkout-total-price">
+                            Total Bill
+                          </span>
+                        </td>
+                        <td colSpan={4}>
+                          <span
+                            style={{ float: "right" }}
+                            className="checkout-total-price"
+                          >
+                            {this.state.total}
+                          </span>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
               </div>
-            </div>
-          </Form.Group>
-
-          <Form.Row>
-            <Form.Group>
-              <Form.Label className="checkout-total-price">
-                Total paid:
-              </Form.Label>
-              <Form.Control
-                name="payment"
-                onChange={(event) =>
-                  this.setState({
-                    totalPayment: event.target.value,
-                  })
-                }
-                value={this.state.totalPayment}
-              />
             </Form.Group>
-          </Form.Row>
 
-          <Button
-            className="btn btn-primary btn-lg lead"
-            onClick={this.handlePayment}
-          >
-            Save
-          </Button>
-        </Form>
+            <Form.Row>
+              <Form.Group>
+                <Form.Label className="checkout-total-price">
+                  Total paid:
+                </Form.Label>
+                <Form.Control
+                  name="payment"
+                  onChange={(event) =>
+                    this.setState({
+                      totalPayment: event.target.value,
+                    })
+                  }
+                  value={this.state.totalPayment}
+                />
+              </Form.Group>
+            </Form.Row>
+
+            <Button
+              className="btn btn-primary btn-lg lead"
+              onClick={this.handlePayment}
+            >
+              Save
+            </Button>
+          </Form>
+        </div>
       </div>
     );
   }

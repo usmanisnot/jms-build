@@ -114,6 +114,8 @@ ul.nav-menu li a h3 {
   display: inline-flex;
   font-size: 35px;
   letter-spacing: 1px;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 #checkoutPaymentAmount {
@@ -238,8 +240,9 @@ ul.nav-menu li a h3 {
 }
 
 .tableFoot {
-  background-color: #ee3837;
-  color: black;
+  /* background-color: #ee3837; */
+  background-color: #212529;
+  color: white;
   font-weight: 600;
 }
 
@@ -258,18 +261,24 @@ ul.nav-menu li a h3 {
   }
 }
 
+.content {
+  margin-top: 2%;
+}
+
 .mainDiv {
   display: flex;
   justify-content: center;
 }
 
 .mainChild {
-  width: 50%;
+  width: 100%;
 }
 .fixed_header {
-  width: 100%;
+  width: 99%;
   table-layout: fixed;
   border-collapse: collapse;
+
+  margin-left: 5px;
 }
 
 .fixed_header tbody {
@@ -284,8 +293,17 @@ ul.nav-menu li a h3 {
 }
 
 .fixed_header thead {
-  background: #ee3837;
+  /* background: #ee3837; */
+  background: #212529;
   color: #fff;
+}
+
+.fixed_header th.name,
+.fixed_header td.name {
+  width: 350px;
+  text-align: left;
+  padding: 5px;
+  font-weight: 500;
 }
 
 .fixed_header th.time,
@@ -342,7 +360,8 @@ ul.nav-menu li a h3 {
 }
 
 .fixed_header_pos thead {
-  background: #ee3837;
+  /* background: #ee3837; */
+  background: #212529;
   color: #fff;
   display: table-caption;
 }
@@ -384,7 +403,8 @@ ul.nav-menu li a h3 {
 }
 
 .text-center {
-  background-color: #ee3837;
+  /* background-color: #ee3837; */
+  background-color: #212529;
 }
 
 .anchorTag {

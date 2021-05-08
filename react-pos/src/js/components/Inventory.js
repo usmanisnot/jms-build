@@ -181,12 +181,13 @@ class Inventory extends Component {
       <div>
         <Header />
 
-        <div className="mainDiv">
+        <div className="mainDiv content">
           <div
             className="ag-theme-alpine"
             style={{
-              height: "550px",
-              width: "900px",
+              height: "600px",
+              width: "100%",
+              margin: "5px",
             }}
           >
             <input
