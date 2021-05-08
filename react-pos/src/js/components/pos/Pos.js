@@ -9,8 +9,7 @@ import PosItem from "./PosItem";
 import ProductsDropdown from "./ProductsDropdown";
 import SearchBar from "./searchBar";
 import Checkout from "../Checkout";
-import htmlToImage from "html-to-image";
-import { Redirect } from "react-router-dom";
+import Creatable, { makeCreatableSelect } from "react-select/creatable";
 
 const HOST = "http://localhost:8001";
 let socket = io.connect(HOST);
@@ -36,6 +35,7 @@ class Pos extends Component {
         quantity_on_hand: 0,
       },
       customer: { name: "", address: "", phone: "" },
+      customers: [],
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleName = this.handleName.bind(this);
@@ -47,13 +47,23 @@ class Pos extends Component {
   }
 
   componentDidMount() {
+    this.setProducts();
+    this.setCustomers();
+  }
+
+  setProducts = () => {
     var url = HOST + `/api/inventory/products`;
     axios.get(url).then((response) => {
-      this.setState({ products: response.data }, () => {
-        console.log("state updated: ", response);
-      });
+      this.setState({ products: response.data });
     });
-  }
+  };
+
+  setCustomers = () => {
+    var url = HOST + `/api/customers/all`;
+    axios.get(url).then((response) => {
+      this.setState({ customers: response.data });
+    });
+  };
 
   componentDidUpdate() {
     if (this.state.items.length !== 0) {
@@ -74,10 +84,8 @@ class Pos extends Component {
     this.updateTotal();
   };
   addItem = (item) => {
-    console.log("this.state.items: ", this.state.items);
     var items = this.state.items;
     var foundItemIndex = items.findIndex((i) => i.id == item.id);
-    console.log("foundItemIndex: ", foundItemIndex);
     if (foundItemIndex >= 0) {
       if (items[foundItemIndex] != null && items[foundItemIndex] != undefined) {
         items[foundItemIndex].quantity++;
@@ -86,33 +94,31 @@ class Pos extends Component {
     } else {
       items.push(item);
     }
-    this.setState({ items: items }, () =>
-      console.log("updated state addItem: ", this.state)
-    );
+    this.setState({ items: items });
+  };
+
+  selectCustomer = (customer) => {
+    this.setState({ customer: customer }, () => {
+      console.log("selected customer: ", this.state);
+    });
   };
 
   handleCustomerName = (e) => {
     var updatedCustomer = { ...this.state.customer };
     updatedCustomer.name = e.target.value;
-    this.setState({ customer: updatedCustomer }, () =>
-      console.log("state updated:", this.state)
-    );
+    this.setState({ customer: updatedCustomer });
   };
 
   handleCustomerAddress = (e) => {
     var updatedCustomer = { ...this.state.customer };
     updatedCustomer.address = e.target.value;
-    this.setState({ customer: updatedCustomer }, () =>
-      console.log("state updated ad:", this.state)
-    );
+    this.setState({ customer: updatedCustomer });
   };
 
   handleCustomerPhone = (e) => {
     var updatedCustomer = { ...this.state.customer };
     updatedCustomer.phone = e.target.value;
-    this.setState({ customer: updatedCustomer }, () =>
-      console.log("state updated ad:", this.state)
-    );
+    this.setState({ customer: updatedCustomer });
   };
 
   handleName = (e) => {
@@ -128,10 +134,10 @@ class Pos extends Component {
     this.updateTotal();
     var amountDiff =
       parseInt(this.state.total, 10) - parseInt(this.state.totalPayment, 10);
+    this.setState({ changeDue: amountDiff, receiptModal: true, items: [] });
+    this.handleSaveToDB();
+    socket.emit("update-live-cart", []);
     if (this.state.total <= this.state.totalPayment) {
-      this.setState({ changeDue: amountDiff, receiptModal: true, items: [] });
-      this.handleSaveToDB();
-      socket.emit("update-live-cart", []);
     } else {
       this.setState({ changeDue: amountDiff });
       //this.setState({ amountDueModal: true });
@@ -163,7 +169,7 @@ class Pos extends Component {
       var price = items[i].unitPrice * items[i].quantity;
       totalCost = parseInt(totalCost, 10) + parseInt(price, 10);
     }
-    this.setState({ total: totalCost, totalPayment: totalCost });
+    this.setState({ total: totalCost });
   };
 
   getSubmitableItems = () => {
@@ -196,7 +202,6 @@ class Pos extends Component {
     this.props.history.push("/receipt", this.getCurrentTransaction());
   };
   handleProductSelect = (item) => {
-    console.log("item: ", item);
     if (item != undefined && item != null) {
       let selectedProduct = this.state.products.find(function (prod) {
         return prod._id == item.value;
@@ -219,9 +224,31 @@ class Pos extends Component {
     this.updateTotal();
   };
 
+  getSearchableCustomers = () => {
+    return this.state.customers.map((item) => {
+      return { label: item.name, value: item.phone };
+    });
+  };
+
+  handleEditableSelectChange = (option) => {
+    var selectedData = this.state.customers[
+      this.state.customers
+        .map(function (item) {
+          return item.phone;
+        })
+        .indexOf(option.value)
+    ];
+    console.log("found customer:", selectedData);
+    if (selectedData == undefined || selectedData == null) {
+      selectedData = { name: option.label, address: "", phone: "" };
+    }
+    this.selectCustomer(selectedData);
+  };
+
   render() {
     var { quantity, modal, items } = this.state;
-
+    var data = this.getSearchableCustomers();
+    var selectedOption = { id: "", name: "" };
     var renderLivePos = () => {
       if (items.length === 0) {
         return (
@@ -254,9 +281,9 @@ class Pos extends Component {
           <Form.Row>
             <Form.Group as={Col} controlId="formGridCustomerName">
               <Form.Label>Customer Name</Form.Label>
-              <Form.Control
-                onChange={this.handleCustomerName}
-                placeholder="Customer's Name"
+              <Creatable
+                options={data}
+                onChange={this.handleEditableSelectChange}
               />
             </Form.Group>
             <Form.Group as={Col} controlId="formGridAddress1">
@@ -264,6 +291,7 @@ class Pos extends Component {
               <Form.Control
                 placeholder="Address"
                 onChange={this.handleCustomerAddress}
+                value={this.state.customer.address}
               />
             </Form.Group>
           </Form.Row>
@@ -277,6 +305,7 @@ class Pos extends Component {
               <Form.Label>Customer Phone</Form.Label>
               <Form.Control
                 onChange={this.handleCustomerPhone}
+                value={this.state.customer.phone}
                 placeholder="Customer's Phone"
               />
             </Form.Group>
@@ -324,21 +353,22 @@ class Pos extends Component {
             </div>
           </Form.Group>
 
-          <Form.Group>
-            <Form.Label className="checkout-total-price">
-              Total paid:
-            </Form.Label>
-            <Form.Control
-              name="payment"
-              className="col-md-3"
-              onChange={(event) =>
-                this.setState({
-                  totalPayment: event.target.value,
-                })
-              }
-              value={this.state.totalPayment}
-            />
-          </Form.Group>
+          <Form.Row>
+            <Form.Group>
+              <Form.Label className="checkout-total-price">
+                Total paid:
+              </Form.Label>
+              <Form.Control
+                name="payment"
+                onChange={(event) =>
+                  this.setState({
+                    totalPayment: event.target.value,
+                  })
+                }
+                value={this.state.totalPayment}
+              />
+            </Form.Group>
+          </Form.Row>
 
           <Button
             className="btn btn-primary btn-lg lead"

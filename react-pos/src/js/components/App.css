@@ -300,6 +300,12 @@ ul.nav-menu li a h3 {
   text-align: left;
   padding: 5px;
 }
+.fixed_header th.balance,
+.fixed_header td.balance {
+  width: 200px;
+  text-align: left;
+  padding: 5px;
+}
 .fixed_header th.products,
 .fixed_header td.products {
   width: 200px;
@@ -308,7 +314,7 @@ ul.nav-menu li a h3 {
 }
 .fixed_header th.open,
 .fixed_header td.open {
-  width: 200px;
+  width: 250px;
   text-align: left;
   padding: 5px;
 }
@@ -377,16 +383,21 @@ ul.nav-menu li a h3 {
   text-align: left;
 }
 
-::-webkit-input-placeholder {
-  /* Edge */
-  color: red;
+.text-center {
+  background-color: #ee3837;
 }
 
-:-ms-input-placeholder {
-  /* Internet Explorer 10-11 */
-  color: red;
+.anchorTag {
+  color: white;
+  font-size: 20px;
 }
-
-::placeholder {
+.anchorTag:hover {
   color: red;
+  text-decoration: none;
+}
+.lead:hover {
+  background-color: white;
+}
+ul.nav-menu li {
+  text-decoration: none;
 }

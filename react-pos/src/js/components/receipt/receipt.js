@@ -7,6 +7,11 @@ import "./receipt.css";
 const HOST = "http://localhost:8001";
 
 class ComponentToPrint extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
   renderItems() {
     var { items } = this.props;
     return items.map((item, i) => (
@@ -22,7 +27,7 @@ class ComponentToPrint extends React.Component {
     ));
   }
   render() {
-    var { date, customer, total, totalPayment } = this.props;
+    var { date, customer, total, totalPayment, previousBalance } = this.props;
     var forDate = date == undefined ? new Date() : new Date(date);
     console.log("date for: ", date);
     return (
@@ -71,7 +76,7 @@ class ComponentToPrint extends React.Component {
                   </div>
                 </div>
               </div>
-              <table border="0" cellspacing="0" cellpadding="0">
+              <table border="0" cellspacing="0" cellPadding="0">
                 <thead>
                   <tr>
                     <th>#</th>
@@ -105,6 +110,14 @@ class ComponentToPrint extends React.Component {
                   </tr>
                 </tfoot>
               </table>
+              <div
+                className={
+                  previousBalance > 0 ? "previousBalance" : "previousDue"
+                }
+              >
+                Balance:{" "}
+                <span style={{ marginLeft: "30px" }}>{previousBalance}</span>
+              </div>
               <div className="thanks">Thank you!</div>
               <div className="notices">
                 <div>NOTICE:</div>
@@ -129,20 +142,19 @@ class ComponentToPrint extends React.Component {
 class Slip extends React.Component {
   constructor(props) {
     super(props);
-    this.state = props.location.state;
-    console.log("this.state: ", this.state);
+    this.state = { ...props.location.state, previousBalance: 0.0 };
   }
-  delete = () => {
-    axios
-      .delete(HOST + "/api?transactionId=" + this.state._id)
-      .then(this.deleteSuccess)
-      .catch((err) => {
-        console.log(err);
-      });
+
+  componentDidMount = () => {
+    this.getBalance();
   };
-  deleteSuccess = (response) => {
-    console.log("response delet: ", response);
+  getBalance = () => {
+    var url = HOST + `/api/balance/` + this.state.customer.phone;
+    axios.get(url).then((response) => {
+      this.setState({ previousBalance: response.data.previousBalance });
+    });
   };
+
   render() {
     return (
       <div>
@@ -153,13 +165,7 @@ class Slip extends React.Component {
         >
           Back
         </button>
-        <button
-          className="btn btn-danger"
-          style={{ margin: 10 }}
-          onClick={() => this.delete}
-        >
-          Delete
-        </button>
+
         <ReactToPrint
           trigger={() => <button className="btn btn-primary">Print</button>}
           content={() => this.componentRef}

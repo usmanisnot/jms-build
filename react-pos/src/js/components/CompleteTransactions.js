@@ -3,6 +3,9 @@ import { Modal, Button } from "react-bootstrap";
 import "./App.css";
 import TransactionDetail from "./TransactionDetail";
 import Moment from "react-moment";
+import axios from "axios";
+
+const HOST = "http://localhost:8001";
 
 class CompleteTransactions extends Component {
   constructor(props) {
@@ -23,6 +26,20 @@ class CompleteTransactions extends Component {
       customer: this.props.customer,
     };
   }
+
+  delete = () => {
+    if (window.confirm("Delete the item?")) {
+      axios
+        .delete(HOST + "/api/" + this.props._id)
+        .then(this.deleteSuccess)
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+  deleteSuccess = (response) => {
+    this.props.deleteSuccess();
+  };
 
   render() {
     var { date, total, items, totalPayment, customer } = this.props;
@@ -47,6 +64,7 @@ class CompleteTransactions extends Component {
           </Moment>
         </td>
         <td className="total"> {total} </td>
+        <td className="balance"> {totalPayment - total} </td>
         <td className="products"> {renderQuantity(items)} </td>
         <td className="open">
           <a
@@ -64,6 +82,13 @@ class CompleteTransactions extends Component {
             }
           >
             View Details
+          </button>
+          <button
+            className="btn btn-danger btn-xs"
+            style={{ margin: 10 }}
+            onClick={() => this.delete()}
+          >
+            X
           </button>
         </td>
 

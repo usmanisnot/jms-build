@@ -128,3 +128,40 @@ app.delete("/:transactionId", function (req, res) {
     }
   );
 });
+
+app.get("/balance/:customerId", function (req, res) {
+  var balanceDue = 0.0;
+  Transactions.find({}, function (err, docs) {
+    docs.forEach((element) => {
+      if (
+        element.customer != undefined &&
+        element.customer.phone == req.params.customerId
+      ) {
+        var localBal = parseInt(element.totalPayment) - parseInt(element.total);
+        if (localBal) {
+          balanceDue = balanceDue + localBal;
+        }
+      }
+    });
+    res.send({ previousBalance: balanceDue });
+  });
+});
+
+app.get("/customers/all", function (req, res) {
+  var customers = [];
+  Transactions.find({}, function (err, docs) {
+    docs.forEach((element) => {
+      if (element.customer) {
+        customers.push(element.customer);
+      }
+    });
+
+    res.send(removeDuplicates(customers, "phone"));
+  });
+});
+
+function removeDuplicates(myArr, prop) {
+  return myArr.filter((obj, pos, arr) => {
+    return arr.map((mapObj) => mapObj[prop]).indexOf(obj[prop]) === pos;
+  });
+}

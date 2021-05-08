@@ -4,16 +4,26 @@ import Header from "./Header";
 import CompleteTransactions from "./CompleteTransactions";
 import axios from "axios";
 import moment from "moment";
+import Select from "react-select";
 
 const HOST = "http://localhost:8001";
-const url = HOST + `/api/all`;
 
 class Transactions extends Component {
   constructor(props) {
     super(props);
-    this.state = { transactions: [] };
+    this.state = { transactions: [], customers: [] };
   }
-  componentWillMount() {
+
+  componentDidMount = () => {
+    this.setTransactions();
+    this.setCustomers();
+  };
+
+  deleteSuccess = () => {
+    this.setTransactions();
+  };
+  setTransactions = () => {
+    var url = HOST + `/api/all`;
     axios
       .get(url)
       .then((response) => {
@@ -27,7 +37,19 @@ class Transactions extends Component {
       .catch((err) => {
         console.log(err);
       });
-  }
+  };
+  setCustomers = () => {
+    var url = HOST + `/api/customers/all`;
+    axios.get(url).then((response) => {
+      this.setState({ customers: response.data });
+    });
+  };
+  getSearchableCustomers = () => {
+    return this.state.customers.map((item) => {
+      return { label: item.name, value: item.phone };
+    });
+  };
+  handleSelectCustomer = (option) => {};
   render() {
     var { transactions } = this.state;
 
@@ -36,7 +58,12 @@ class Transactions extends Component {
         return <p>No Transactions found</p>;
       } else {
         return transactions.map((transaction, i) => (
-          <CompleteTransactions key={i} {...transaction} {...this.props} />
+          <CompleteTransactions
+            key={i}
+            {...transaction}
+            {...this.props}
+            deleteSuccess={this.deleteSuccess}
+          />
         ));
       }
     };
@@ -48,8 +75,14 @@ class Transactions extends Component {
         <table className=" table-striped fixed_header">
           <thead>
             <tr>
-              <th className="time">Time</th>
+              <th className="time">
+                <Select
+                  options={this.getSearchableCustomers()}
+                  onChange={this.handleSelectCustomer}
+                />
+              </th>
               <th className="total">Total</th>
+              <th className="balance">Balance</th>
               <th className="products">Products</th>
               <th className="open"></th>
             </tr>
