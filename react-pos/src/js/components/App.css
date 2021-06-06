@@ -421,3 +421,10 @@ ul.nav-menu li a h3 {
 ul.nav-menu li {
   text-decoration: none;
 }
+
+.barcodeContainer {
+  margin: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

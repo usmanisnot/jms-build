@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "../App.css";
 import bwipjs from "bwip-js";
 import BarCode from "./BarCode";
+import BarCodePrinter from "./BarCodePrinter";
 
 class BarCodeContainer extends Component {
   constructor(props) {
@@ -13,27 +14,27 @@ class BarCodeContainer extends Component {
   componentDidMount() {
     console.log("BarCodeContainer", this.props);
 
-    this.props.location.state.forEach((element) => {
-      // return bwipjs.toCanvas(element.barCode, {
-      //   bcid: "code128", // Barcode type
-      //   text: this.props.barCode, // Text to encode
-      //   scale: 1, // 3x scaling factor
-      //   height: 9, // Bar height, in millimeters
-      //   includetext: true, // Show human-readable text
-      //   textxalign: "center", // Always good to set this
-      // });
-      console.log("item: ", element.barCode);
-    });
+    // this.props.location.state.forEach((element) => {
+    //   return bwipjs.toCanvas(element.barCode, {
+    //     bcid: "code128", // Barcode type
+    //     text: element.barCode, // Text to encode
+    //     scale: 1, // 3x scaling factor
+    //     height: 9, // Bar height, in millimeters
+    //     includetext: true, // Show human-readable text
+    //     textxalign: "center", // Always good to set this
+    //   });
+    //   console.log("item: ", element.barCode);
+    // });
   }
 
   render() {
     const items = this.props.location.state;
-    return items.map((item) => {
-      <div>
-        <p>{item.name}</p>
+    return items.map((item) => (
+      <div className="barcodeContainer">
+        <BarCode barCode={item.barCode} />
         {/* <canvas style={{ marginTop: 5 }} id={item.barCode}></canvas>; */}
-      </div>;
-    });
+      </div>
+    ));
   }
 }
 

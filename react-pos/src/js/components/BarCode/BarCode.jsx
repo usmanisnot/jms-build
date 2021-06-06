@@ -10,19 +10,23 @@ class BarCode extends Component {
   componentWillMount() {}
 
   componentDidMount() {
-    console.log("this props:", this.props);
-    return bwipjs.toCanvas("myCanvas", {
+    var barCode = this.props.location
+      ? this.props.location.state.code
+      : this.props.barCode;
+    return bwipjs.toCanvas(barCode, {
       bcid: "code128", // Barcode type
-      text: this.props.location.state.code, // Text to encode
-      scale: 1, // 3x scaling factor
+      text: barCode, // Text to encode
+      scale: 3, // 3x scaling factor
       height: 9, // Bar height, in millimeters
       includetext: true, // Show human-readable text
       textxalign: "center", // Always good to set this
     });
   }
-
   render() {
-    return <canvas style={{ marginTop: 5 }} id="myCanvas"></canvas>;
+    const barCode = this.props.location
+      ? this.props.location.state.code
+      : this.props.barCode;
+    return <canvas style={{ marginTop: 5 }} id={barCode}></canvas>;
   }
 }
 

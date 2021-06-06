@@ -15,19 +15,6 @@ import BarCodeContainer from "./BarCode/BarCodeContainer.jsx";
 
 const HOST = "http://localhost:8001";
 
-function getCanvas(e) {
-  var barCode = e.target.name;
-  console.log("getCanvas,", e.target);
-  // return bwipjs.toCanvas("" + barCode, {
-  //   bcid: "code128", // Barcode type
-  //   text: barCode, // Text to encode
-  //   scale: 3, // 3x scaling factor
-  //   height: 10, // Bar height, in millimeters
-  //   includetext: true, // Show human-readable text
-  //   textxalign: "center", // Always good to set this
-  // });
-}
-
 class Inventory extends Component {
   constructor(props) {
     super(props);
@@ -256,6 +243,17 @@ class Inventory extends Component {
               className="btn btn-success"
               value="Add new"
               onClick={this.addNewProduct}
+              style={{ marginRight: 5, marginBottom: 5 }}
+            />
+
+            <input
+              type="button"
+              className="btn btn-info"
+              value="View Barcodes"
+              onClick={() => {
+                this.props.history.push("/barcodes", products);
+              }}
+              style={{ marginLeft: 5, marginBottom: 5 }}
             />
 
             <AgGridReact
