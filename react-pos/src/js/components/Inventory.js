@@ -341,12 +341,12 @@ class Inventory extends Component {
                   className="col-md-8 control-label"
                   htmlFor="stock_provider"
                 >
-                  Company/Distributer
+                  Size
                 </label>
                 <div className="col-md-12">
                   <input
                     name="stock_provider"
-                    placeholder="Company or Distributer"
+                    placeholder="Small/XL/XXL.."
                     onChange={this.handleProvider}
                     className="form-control"
                   />

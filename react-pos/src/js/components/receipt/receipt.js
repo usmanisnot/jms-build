@@ -154,7 +154,12 @@ class Slip extends React.Component {
     });
   };
 
-  getPrinter() {}
+  getPrinter() {
+    var url = HOST + `/api/print/`;
+    axios.post(url).then((response) => {
+      console.log("test success");
+    });
+  }
 
   render() {
     return (

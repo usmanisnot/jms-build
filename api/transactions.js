@@ -5,8 +5,8 @@ var Datastore = require("nedb");
 
 var Inventory = require("./inventory");
 
-// const ThermalPrinter = require("../node-thermal-printer").printer;
-// const PrinterTypes = require("../node-thermal-printer").types;
+const ThermalPrinter = require("node-thermal-printer").printer;
+const PrinterTypes = require("node-thermal-printer").types;
 
 app.use(bodyParser.json());
 
@@ -115,7 +115,7 @@ app.post("/new", function (req, res) {
 
 app.post("/print", function (req, res) {
   var transactionToPrint = req.body;
-  response.send(printReciept(transactionToPrint));
+  res.send(printReciept(transactionToPrint));
 });
 
 // GET a single transaction
