@@ -37,7 +37,7 @@ const Header = () => (
 
   <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
     <Navbar.Brand href="#home">
-      <h2 style={{ color: "white" }}>Yousaf Traders</h2>
+      <h2 style={{ color: "white" }}>Victress Store</h2>
     </Navbar.Brand>
     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
     <Navbar.Collapse id="responsive-navbar-nav">

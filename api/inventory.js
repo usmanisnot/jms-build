@@ -3,6 +3,7 @@ var server = require("http").Server(app);
 var bodyParser = require("body-parser");
 var Datastore = require("nedb");
 var async = require("async");
+const crypto = require("crypto");
 
 app.use(bodyParser.json());
 
@@ -43,6 +44,13 @@ app.get("/products/search", function (req, res) {
   inventoryDB.find({ name: new RegExp(req.query.term) }, function (err, docs) {
     console.log("searching inventory products");
     res.send(docs);
+  });
+});
+
+app.get("/newid", function (req, res) {
+  console.log("got req");
+  res.send({
+    id: generateRandomLetter() + Date.now().toString(),
   });
 });
 
@@ -104,3 +112,9 @@ app.decrementInventory = function (products) {
     );
   });
 };
+
+function generateRandomLetter() {
+  const alphabet = "abcdefghijklmnopqrstuvwxyz".toUpperCase();
+
+  return alphabet[Math.floor(Math.random() * alphabet.length)];
+}

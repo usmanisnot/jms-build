@@ -17,6 +17,7 @@ let socket = io.connect(HOST);
 class Pos extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       items: [],
       selectedProduct: {},
@@ -49,7 +50,29 @@ class Pos extends Component {
   componentDidMount() {
     this.setProducts();
     this.setCustomers();
+
+    // Setup Key Listener for the barcode scanner
+
+    let self = this;
+
+    let scannedBarcode = "";
+    window.onkeypress = function (e) {
+      let barcode = "";
+      let code = e.keyCode ? e.keyCode : e.which;
+      barcode = barcode + String.fromCharCode(code);
+      scannedBarcode += barcode;
+
+      if (code === 13) {
+        console.log("DISPATCHING: " + scannedBarcode);
+        self.scan(scannedBarcode);
+        scannedBarcode = "";
+      }
+    };
   }
+
+  scan = (scannedBarcode) => {
+    console.log("SCANNED", scannedBarcode);
+  };
 
   setProducts = () => {
     var url = HOST + `/api/inventory/products`;
@@ -231,13 +254,14 @@ class Pos extends Component {
   };
 
   handleEditableSelectChange = (option) => {
-    var selectedData = this.state.customers[
-      this.state.customers
-        .map(function (item) {
-          return item.phone;
-        })
-        .indexOf(option.value)
-    ];
+    var selectedData =
+      this.state.customers[
+        this.state.customers
+          .map(function (item) {
+            return item.phone;
+          })
+          .indexOf(option.value)
+      ];
     console.log("found customer:", selectedData);
     if (selectedData == undefined || selectedData == null) {
       selectedData = { name: option.label, address: "", phone: "" };

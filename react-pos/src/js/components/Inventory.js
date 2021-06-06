@@ -9,8 +9,24 @@ import { AgGridReact, SortableHeaderComponent } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import productButtonRender from "./productButtonRender";
+import MyCellRenderer from "./myCellRenderer";
+import BarCode from "./BarCode/BarCode.jsx";
+import BarCodeContainer from "./BarCode/BarCodeContainer.jsx";
 
 const HOST = "http://localhost:8001";
+
+function getCanvas(e) {
+  var barCode = e.target.name;
+  console.log("getCanvas,", e.target);
+  // return bwipjs.toCanvas("" + barCode, {
+  //   bcid: "code128", // Barcode type
+  //   text: barCode, // Text to encode
+  //   scale: 3, // 3x scaling factor
+  //   height: 10, // Bar height, in millimeters
+  //   includetext: true, // Show human-readable text
+  //   textxalign: "center", // Always good to set this
+  // });
+}
 
 class Inventory extends Component {
   constructor(props) {
@@ -24,7 +40,7 @@ class Inventory extends Component {
       quantity: 1,
       price: "",
       stockProvider: "",
-      barCode: "",
+      barCode: "NoCode",
       columnDefs: [
         {
           headerName: "Name",
@@ -59,6 +75,7 @@ class Inventory extends Component {
           sortable: true,
           filter: true,
           editable: true,
+          cellRenderer: "myCellRenderer",
         },
         {
           headerName: "Distributer",
@@ -88,6 +105,22 @@ class Inventory extends Component {
     //get all products from server
     this.refreshAllProducts();
   }
+
+  componentDidMount() {}
+
+  updateBarCode = () => {
+    var url = HOST + `/api/inventory/newid`;
+    axios.get(url).then((response) => {
+      console.log("newid: ", response);
+      this.setState({ barCode: response.data.id }, () => {
+        console.log("state bacode: ", this.state);
+        if (this.state.productFormModal) {
+          this.refreshBarCode();
+        }
+      });
+    });
+  };
+
   refreshAllProducts() {
     var url = HOST + `/api/inventory/products`;
     axios.get(url).then((response) => {
@@ -164,6 +197,32 @@ class Inventory extends Component {
     this.handleEditProduct(event.data);
   };
 
+  addNewProduct = () => {
+    this.updateBarCode();
+    this.setState({ productFormModal: true }, () => {
+      this.refreshBarCode();
+    });
+  };
+
+  refreshBarCode = () => {
+    // try {
+    //   console.log("this.state.barCode: ", this.state.barCode);
+    //   // The return value is the canvas element
+    //   let canvas = bwipjs.toCanvas("mycanvas", {
+    //     bcid: "code128", // Barcode type
+    //     text: this.state.barCode, // Text to encode
+    //     scale: 3, // 3x scaling factor
+    //     height: 10, // Bar height, in millimeters
+    //     includetext: true, // Show human-readable text
+    //     textxalign: "center", // Always good to set this
+    //   });
+    //   console.log("canvas: ", canvas);
+    // } catch (e) {
+    //   // `e` may be a string or Error object
+    //   console.log("catch: ", e);
+    // }
+  };
+
   render() {
     var { products, snackMessage } = this.state;
 
@@ -181,6 +240,8 @@ class Inventory extends Component {
       <div>
         <Header />
 
+        {/* <BarCodeContainer products={products} /> */}
+
         <div className="mainDiv content">
           <div
             className="ag-theme-alpine"
@@ -194,9 +255,13 @@ class Inventory extends Component {
               type="button"
               className="btn btn-success"
               value="Add new"
-              onClick={() => this.setState({ productFormModal: true })}
+              onClick={this.addNewProduct}
             />
+
             <AgGridReact
+              frameworkComponents={{
+                myCellRenderer: MyCellRenderer,
+              }}
               columnDefs={this.state.columnDefs}
               rowData={this.state.products}
               animateRows
@@ -218,28 +283,6 @@ class Inventory extends Component {
             ></AgGridReact>
           </div>
         </div>
-        {/* <div className="container">
-          <a
-            className="btn btn-success pull-right"
-            onClick={() => this.setState({ productFormModal: true })}
-          >
-            <i className="glyphicon glyphicon-plus" /> Add New Item
-          </a>
-          <br />
-          <br />
-
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Price</th>
-                <th scope="col">Quantity on Hand</th>
-                <th />
-              </tr>
-            </thead>
-            { <tbody>{renderProducts()}</tbody> }
-          </table>
-        </div> */}
 
         <Modal show={this.state.productFormModal}>
           <Modal.Header>
@@ -247,20 +290,6 @@ class Inventory extends Component {
           </Modal.Header>
           <Modal.Body>
             <form className="form-horizontal" name="newProductForm">
-              <div className="form-group">
-                <label className="col-md-4 control-label" htmlFor="barcode">
-                  Barcode
-                </label>
-                <div className="col-md-12">
-                  <input
-                    id="barcode"
-                    name="barcode"
-                    placeholder="Barcode"
-                    className="form-control"
-                    onChange={this.handleBarCode}
-                  />
-                </div>
-              </div>
               <div className="form-group">
                 <label className="col-md-4 control-label" htmlFor="name">
                   Name
@@ -321,6 +350,26 @@ class Inventory extends Component {
                     onChange={this.handleProvider}
                     className="form-control"
                   />
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="col-md-4 control-label" htmlFor="barcode">
+                  Barcode
+                </label>
+                <div className="col-md-12">
+                  <input
+                    id="barcode"
+                    name="barcode"
+                    placeholder="Barcode"
+                    className="form-control"
+                    disabled={true}
+                    onChange={undefined}
+                    value={this.state.barCode}
+                  />
+                </div>
+                <div className="col-md-12">
+                  {/* <canvas style={{ marginTop: 5 }} id="mycanvas"></canvas> */}
+                  {/* <BarCode barCode={this.state.barCode} /> */}
                 </div>
               </div>
               <br /> <br /> <br />

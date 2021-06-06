@@ -5,6 +5,8 @@ import Pos from "./pos/Pos";
 import Transactions from "./Transactions";
 import LiveCart from "./LiveCart";
 import Slip from "./receipt/receipt";
+import BarCodeContainer from "./BarCode/BarCodeContainer";
+import BarCode from "./BarCode/BarCode";
 
 const Main = () => (
   <main className="mainDiv paper">
@@ -18,6 +20,8 @@ const Main = () => (
         />
         <Route path="/livecart" component={LiveCart} />
         <Route path="/receipt" component={Slip} />
+        <Route path="/barcodes" component={BarCodeContainer} />
+        <Route path="/barcode" component={BarCode} />
       </Switch>
     </div>
   </main>

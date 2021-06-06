@@ -26,6 +26,7 @@ class ComponentToPrint extends React.Component {
       </tr>
     ));
   }
+
   render() {
     var { date, customer, total, totalPayment, previousBalance } = this.props;
     var forDate = date == undefined ? new Date() : new Date(date);
@@ -38,12 +39,10 @@ class ComponentToPrint extends React.Component {
               <div className="row">
                 <div className="col"></div>
                 <div className="col company-details">
-                  <h2 className="name">Yousaf Traders</h2>
-                  <div>
-                    Shop # 1 Gujjar plaza near Amin park bund road Lahore.
-                  </div>
-                  <div>03217773126</div>
-                  <div>yes26@gmail.com</div>
+                  <h2 className="name">Victress Store</h2>
+                  <div></div>
+                  <div>03116716165</div>
+                  <div>victress@gmail.com</div>
                 </div>
               </div>
             </header>
@@ -155,6 +154,8 @@ class Slip extends React.Component {
     });
   };
 
+  getPrinter() {}
+
   render() {
     return (
       <div>
@@ -164,6 +165,14 @@ class Slip extends React.Component {
           onClick={() => this.props.history.goBack()}
         >
           Back
+        </button>
+
+        <button
+          className="btn btn-info"
+          style={{ margin: 10 }}
+          onClick={() => this.getPrinter()}
+        >
+          Print thermal
         </button>
 
         <ReactToPrint

@@ -24,6 +24,7 @@ const customStyles = {
 class ProductsDropdown extends Component {
   constructor(props) {
     super(props);
+    this.barcodeInput = React.createRef();
     console.log("props: ", props);
     this.state = { options: [], selectValue: {} };
     console.log("this.state: ", this.state);
@@ -53,7 +54,9 @@ class ProductsDropdown extends Component {
     document.removeEventListener("keydown", this._handleKeyDown);
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.barcodeInput.current.focus();
+  }
 
   onChangehandler = (selectValue) => {
     this.setState({ selectValue });
@@ -76,6 +79,7 @@ class ProductsDropdown extends Component {
         className="selectComponenet"
         onKeyPress={this.keyPressed}
         styles={customStyles}
+        ref={this.barcodeInput}
       />
     );
   }
