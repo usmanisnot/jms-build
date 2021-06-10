@@ -384,12 +384,12 @@ ul.nav-menu li a h3 {
 .fixed_header_pos th.quantityAvailable,
 .fixed_header_pos td.quantityAvailable {
   width: 200px;
-  text-align: left;
+  text-align: center;
 }
 .fixed_header_pos th.tax,
 .fixed_header_pos td.tax {
-  width: 50px;
-  text-align: left;
+  width: 200px;
+  text-align: center;
 }
 .fixed_header_pos th.total,
 .fixed_header_pos td.total {

@@ -23,6 +23,7 @@ class Inventory extends Component {
       products: [],
       productFormModal: false,
       name: "",
+      code: "",
       snackMessage: "",
       quantity: 1,
       price: "",
@@ -41,6 +42,13 @@ class Inventory extends Component {
             console.log("this: ", this);
             return true;
           },
+        },
+        {
+          headerName: "Code",
+          field: "code",
+          sortable: true,
+          filter: true,
+          editable: true,
         },
         {
           headerName: "Price",
@@ -79,11 +87,11 @@ class Inventory extends Component {
       ],
     };
 
-    this.handleNewProduct = this.handleNewProduct.bind(this);
-    this.handleName = this.handleName.bind(this);
-    this.handlePrice = this.handlePrice.bind(this);
-    this.handleQuantity = this.handleQuantity.bind(this);
-    this.handleSnackbar = this.handleSnackbar.bind(this);
+    // this.handleNewProduct = this.handleNewProduct.bind(this);
+    // this.handleName = this.handleName.bind(this);
+    // this.handlePrice = this.handlePrice.bind(this);
+    // this.handleQuantity = this.handleQuantity.bind(this);
+    // this.handleSnackbar = this.handleSnackbar.bind(this);
   }
 
   handleNameEditinGrid(params) {}
@@ -99,12 +107,7 @@ class Inventory extends Component {
     var url = HOST + `/api/inventory/newid`;
     axios.get(url).then((response) => {
       console.log("newid: ", response);
-      this.setState({ barCode: response.data.id }, () => {
-        console.log("state bacode: ", this.state);
-        if (this.state.productFormModal) {
-          this.refreshBarCode();
-        }
-      });
+      this.setState({ barCode: response.data.id });
     });
   };
 
@@ -121,6 +124,7 @@ class Inventory extends Component {
     this.setState({ productFormModal: false });
     var newProduct = {
       name: this.state.name,
+      code: this.state.code,
       quantity: this.state.quantity,
       price: this.state.price,
       stockProvider: this.state.stockProvider,
@@ -160,6 +164,9 @@ class Inventory extends Component {
   handleName = (e) => {
     this.setState({ name: e.target.value });
   };
+  handleCode = (e) => {
+    this.setState({ code: e.target.value });
+  };
   handlePrice = (e) => {
     this.setState({ price: e.target.value });
   };
@@ -186,28 +193,7 @@ class Inventory extends Component {
 
   addNewProduct = () => {
     this.updateBarCode();
-    this.setState({ productFormModal: true }, () => {
-      this.refreshBarCode();
-    });
-  };
-
-  refreshBarCode = () => {
-    // try {
-    //   console.log("this.state.barCode: ", this.state.barCode);
-    //   // The return value is the canvas element
-    //   let canvas = bwipjs.toCanvas("mycanvas", {
-    //     bcid: "code128", // Barcode type
-    //     text: this.state.barCode, // Text to encode
-    //     scale: 3, // 3x scaling factor
-    //     height: 10, // Bar height, in millimeters
-    //     includetext: true, // Show human-readable text
-    //     textxalign: "center", // Always good to set this
-    //   });
-    //   console.log("canvas: ", canvas);
-    // } catch (e) {
-    //   // `e` may be a string or Error object
-    //   console.log("catch: ", e);
-    // }
+    this.setState({ productFormModal: true });
   };
 
   render() {
@@ -263,8 +249,8 @@ class Inventory extends Component {
               columnDefs={this.state.columnDefs}
               rowData={this.state.products}
               animateRows
-              showToolPanel="true"
-              enableSorting="true"
+              showToolPanel={true}
+              enableSorting={true}
               editType="fullRow"
               onCellValueChanged={this.handleonCellValueChanged}
               defaultColDef={{
@@ -282,7 +268,7 @@ class Inventory extends Component {
           </div>
         </div>
 
-        <Modal show={this.state.productFormModal}>
+        <Modal size="lg" show={this.state.productFormModal}>
           <Modal.Header>
             <Modal.Title>Add Product</Modal.Title>
           </Modal.Header>
@@ -298,6 +284,19 @@ class Inventory extends Component {
                     placeholder="Name"
                     className="form-control"
                     onChange={this.handleName}
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="col-md-4 control-label" htmlFor="code">
+                  Code
+                </label>
+                <div className="col-md-12">
+                  <input
+                    name="code"
+                    placeholder="code"
+                    className="form-control"
+                    onChange={this.handleCode}
                   />
                 </div>
               </div>

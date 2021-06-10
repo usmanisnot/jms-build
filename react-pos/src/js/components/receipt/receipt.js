@@ -16,9 +16,9 @@ class ComponentToPrint extends React.Component {
     var { items } = this.props;
     return items.map((item, i) => (
       <tr key={i}>
-        <td className="quantity">{item.quantity}</td>
-        <td className="description">{item.name}</td>
-        <td className="price">Rs {item.unitPrice * item.quantity}</td>
+        <td className="quantityReciept">{item.quantity}</td>
+        <td className="descriptionReciept">{item.name}</td>
+        <td className="priceReciept">Rs {item.unitPrice * item.quantity}</td>
       </tr>
     ));
   }
@@ -29,122 +29,22 @@ class ComponentToPrint extends React.Component {
     console.log("date for: ", date);
     return (
       <div className="ticket">
-        <div className="branding" />
+        <div className="brandingContainer">
+          <div className="branding" />
+        </div>
         <p className="centered">RECEIPT EXAMPLE Address line 1</p>
         <table>
           <thead>
             <tr>
-              <th className="quantity">Q.</th>
-              <th className="description">Description</th>
-              <th className="price">RS</th>
+              <th className="quantityReciept">Q.</th>
+              <th className="descriptionReciept">Description</th>
+              <th className="priceReciept">RS</th>
             </tr>
           </thead>
           <tbody>{this.renderItems()}</tbody>
         </table>
         <p className="centered">Thanks for your purchase! parzibyte.me/blog</p>
       </div>
-      // <div id="invoice">
-      //   <div className="invoice overflow-auto">
-      //     <div style={{ minWidth: 600 }}>
-      //       <header>
-      //         <div className="row">
-      //           <div className="col"></div>
-      //           <div className="col company-details">
-      //             <h2 className="name">Victress Store</h2>
-      //             <div></div>
-      //             <div>03116716165</div>
-      //             <div>victress@gmail.com</div>
-      //           </div>
-      //         </div>
-      //       </header>
-      //       <main>
-      //         <div className="row contacts">
-      //           <div className="col invoice-to">
-      //             <div className="text-gray-light">INVOICE TO:</div>
-      //             <h2 className="to"> {customer && customer.name}</h2>
-      //             <div className="address">{customer && customer.address}</div>
-      //             <div className="phone">{customer && customer.phone}</div>
-      //           </div>
-      //           <div className="col invoice-details">
-      //             <h1 className="invoice-id">
-      //               INVOICE# {String(forDate.valueOf()).substring(4, 11)}
-      //             </h1>
-      //             <div
-      //               style={{ fontWeight: "bold", fontStyle: "italic" }}
-      //               className="date"
-      //             >
-      //               Date of Invoice:{" "}
-      //               <Moment local format="MMM D, YYYY">
-      //                 {date}
-      //               </Moment>
-      //             </div>
-      //             <div className="date hidden">
-      //               Due Date:{" "}
-      //               <Moment local format="MMM D, YYYY">
-      //                 {date}
-      //               </Moment>
-      //             </div>
-      //           </div>
-      //         </div>
-      //         <table border="0" cellspacing="0" cellPadding="0">
-      //           <thead>
-      //             <tr>
-      //               <th>#</th>
-      //               <th className="text-left">DESCRIPTION</th>
-      //               <th className="text-right">UNIT PRICE</th>
-      //               <th className="text-right">QUANTITY</th>
-      //               <th className="text-right">TOTAL</th>
-      //             </tr>
-      //           </thead>
-      //           <tbody>{this.renderItems()}</tbody>
-      //           <tfoot>
-      //             <tr className="hidden">
-      //               <td colSpan="2"></td>
-      //               <td colSpan="2">SUBTOTAL</td>
-      //               <td> Rs {total}</td>
-      //             </tr>
-      //             <tr className="hidden">
-      //               <td colSpan="2"></td>
-      //               <td colSpan="2">TAX 0%</td>
-      //               <td>RS 00.00</td>
-      //             </tr>
-      //             <tr>
-      //               <td colSpan="2"></td>
-      //               <td colSpan="2">GRAND TOTAL</td>
-      //               <td> Rs {total}</td>
-      //             </tr>
-      //             <tr>
-      //               <td colSpan="2"></td>
-      //               <td colSpan="2">TOTAL PAID</td>
-      //               <td> Rs {totalPayment}</td>
-      //             </tr>
-      //           </tfoot>
-      //         </table>
-      //         <div
-      //           className={
-      //             previousBalance > 0 ? "previousBalance" : "previousDue"
-      //           }
-      //         >
-      //           Balance (Rs):{" "}
-      //           <span style={{ marginLeft: "30px" }}>{previousBalance}</span>
-      //         </div>
-      //         <div className="thanks">Thank you!</div>
-      //         <div className="notices">
-      //           <div>NOTICE:</div>
-      //           <div className="notice">
-      //             A finance charge of 1.5% will be made on unpaid balances after
-      //             30 days.
-      //           </div>
-      //         </div>
-      //       </main>
-      //       <footer>
-      //         Invoice was created on a computer and is valid without the
-      //         signature and seal.
-      //       </footer>
-      //     </div>
-      //     <div></div>
-      //   </div>
-      // </div>
     );
   }
 }
@@ -157,6 +57,7 @@ class Slip extends React.Component {
 
   componentDidMount = () => {
     this.getBalance();
+    console.log("this.tate: ", this.state);
   };
   getBalance = () => {
     var url = HOST + `/api/balance/` + this.state.customer.phone;

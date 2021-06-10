@@ -13,7 +13,12 @@ class PosItem extends Component {
     this.props.onChange(id, itemNumber);
   };
   handleChangeQuantity = (id, e) => {
-    this.props.onChange(id, e.target.value);
+    if (
+      this.props.quantity_on_hand - e.target.value > 0 &&
+      e.target.value != 0
+    ) {
+      this.props.onChange(id, e.target.value);
+    }
   };
   render() {
     const { id, name, unitPrice, quantity, quantity_on_hand } = this.props;
@@ -40,7 +45,7 @@ class PosItem extends Component {
             <input
               style={{ width: "75px" }}
               type="number"
-              minLength="0"
+              minLength={0}
               onChange={(e) => this.handleChangeQuantity(id, e)}
               value={itemNumber}
             />
@@ -53,7 +58,7 @@ class PosItem extends Component {
             <i className="glyphicon glyphicon-plus" />
           </button> */}
         </td>
-        <td className="quantityAvailable">{quantity_on_hand}</td>
+        <td className="quantityAvailable">{quantity_on_hand - quantity}</td>
         <td className="tax">0.00</td>
         <td defaultValue="0.00" className="col-md-2 total">
           {unitPrice * quantity}

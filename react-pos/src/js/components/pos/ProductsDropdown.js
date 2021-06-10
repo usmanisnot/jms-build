@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "../App.css";
 //import "./select.css";
-//import "./searchBar.css";
+import "./searchBar.css";
 
 // import "react-select/dist/react-select.css";
 // import "react-virtualized-select/styles.css";
@@ -10,16 +10,16 @@ import axios from "axios";
 
 const HOST = "http://localhost:8001";
 
-const customStyles = {
-  option: (styles, { isDisabled }) => {
-    return {
-      ...styles,
-      backgroundColor: isDisabled ? "#ee3837" : "white",
-      color: "#000",
-      cursor: isDisabled ? "not-allowed" : "default",
-    };
-  },
-};
+// const customStyles = {
+//   option: (styles, { isDisabled }) => {
+//     return {
+//       ...styles,
+//       backgroundColor: isDisabled ? "#ee3837" : "white",
+//       color: "#000",
+//       cursor: isDisabled ? "not-allowed" : "default",
+//     };
+//   },
+// };
 
 class ProductsDropdown extends Component {
   constructor(props) {
@@ -31,16 +31,24 @@ class ProductsDropdown extends Component {
     //this.selectRef = React.createRef();
   }
   mapOnSelectData = (arr) => {
+    console.log("arra: ", arr);
     let result = [];
     arr.forEach((element) => {
       result.push({
-        label: element.barCode + " - " + element.name,
+        label:
+          (element.barCode == undefined ? "" : element.barCode) +
+          " - " +
+          (element.code == undefined ? "" : element.code) +
+          " - " +
+          element.name,
         value: element._id,
-        price: element.price,
-        quantity: element.quantity,
-        isDisabled: element.quantity < 1,
+        price: parseFloat(element.price == undefined ? "0.00" : element.price),
+        quantity: parseInt(
+          element.quantity == undefined ? "0.00" : element.quantity
+        ),
       });
     });
+    console.log("result: ", result);
     return result;
   };
   componentWillMount() {
@@ -51,7 +59,6 @@ class ProductsDropdown extends Component {
         console.log("state updated: ", response);
       });
     });
-    document.removeEventListener("keydown", this._handleKeyDown);
   }
 
   componentDidMount() {
@@ -60,6 +67,7 @@ class ProductsDropdown extends Component {
 
   onChangehandler = (selectValue) => {
     this.setState({ selectValue });
+    console.log("selectValue", selectValue);
     this.props.onProductSelect(selectValue);
   };
 
@@ -78,7 +86,6 @@ class ProductsDropdown extends Component {
         placeholder="Search..."
         className="selectComponenet"
         onKeyPress={this.keyPressed}
-        styles={customStyles}
         ref={this.barcodeInput}
       />
     );

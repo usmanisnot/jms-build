@@ -37,8 +37,8 @@ class Pos extends Component {
       },
       customer: { name: "", address: "", phone: "" },
       customers: [],
+      transaction: {},
     };
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.handleName = this.handleName.bind(this);
     this.handlePrice = this.handlePrice.bind(this);
     this.handleQuantity = this.handleQuantity.bind(this);
@@ -94,28 +94,22 @@ class Pos extends Component {
     }
   }
 
-  handleSubmit = (e) => {
-    this.setState({ addItemModal: false });
-
-    const currentItem = {
-      id: this.state.id,
-      name: this.state.name,
-      unitPrice: this.state.unitPrice,
-      quantity: this.state.quantity,
-    };
-    this.addItem(currentItem);
-    this.updateTotal();
-  };
   addItem = (item) => {
     var items = this.state.items;
     var foundItemIndex = items.findIndex((i) => i.id == item.id);
     if (foundItemIndex >= 0) {
       if (items[foundItemIndex] != null && items[foundItemIndex] != undefined) {
-        items[foundItemIndex].quantity++;
-        items[foundItemIndex].quantity_on_hand--;
+        var q = items[foundItemIndex].quantity++;
+        var qOnhand = items[foundItemIndex].quantity_on_hand--;
+        if (q <= qOnhand) {
+          items[foundItemIndex].quantity = q;
+          items[foundItemIndex].quantity_on_hand = qOnhand;
+        }
       }
     } else {
-      items.push(item);
+      if (item.quantity <= item.quantity_on_hand) {
+        items.push(item);
+      }
     }
     this.setState({ items: items });
   };
@@ -155,8 +149,7 @@ class Pos extends Component {
   };
   handlePayment = () => {
     this.updateTotal();
-    var amountDiff =
-      parseInt(this.state.total, 10) - parseInt(this.state.totalPayment, 10);
+    var amountDiff = this.state.total - this.state.totalPayment;
     this.setState({ changeDue: amountDiff, receiptModal: true, items: [] });
     this.handleSaveToDB();
     socket.emit("update-live-cart", []);
@@ -172,25 +165,31 @@ class Pos extends Component {
       var newitems = items.filter(function (item) {
         return item.id !== id;
       });
-      this.setState({ items: newitems });
+      this.setState({ items: newitems }, () => {
+        this.updateTotal();
+      });
     } else {
       for (var i = 0; i < items.length; i++) {
         if (items[i].id === id) {
+          console.log("items[i] item: ", items[i]);
           items[i].quantity = value;
-          items[i].quantity_on_hand = items[i].quantity_on_hand - 1;
-          this.setState({ items: items });
+          console.log("updated item: ", items[i]);
+          this.setState({ items: items }, () => {
+            this.updateTotal();
+          });
         }
       }
     }
-    this.updateTotal();
   };
 
   updateTotal = () => {
     var items = this.state.items;
     var totalCost = 0;
     for (var i = 0; i < items.length; i++) {
-      var price = items[i].unitPrice * items[i].quantity;
-      totalCost = parseInt(totalCost, 10) + parseInt(price, 10);
+      var unitPrice = items[i].unitPrice == undefined ? 0 : items[i].unitPrice;
+      var quantity = items[i].quantity == undefined ? 0 : items[i].quantity;
+      var price = unitPrice * quantity;
+      totalCost += price;
     }
     this.setState({ total: totalCost });
   };
@@ -214,6 +213,7 @@ class Pos extends Component {
 
   handleSaveToDB = () => {
     const transaction = this.getCurrentTransaction();
+    this.setState({ transaction: transaction });
     axios
       .post(HOST + "/api/new", transaction)
       .then(this.successSaveToDb)
@@ -222,9 +222,10 @@ class Pos extends Component {
       });
   };
   successSaveToDb = (response) => {
-    this.props.history.push("/receipt", this.getCurrentTransaction());
+    this.props.history.push("/receipt", this.state.transaction);
   };
   handleProductSelect = (item) => {
+    console.log("item:", item);
     if (item != undefined && item != null) {
       let selectedProduct = this.state.products.find(function (prod) {
         return prod._id == item.value;
@@ -238,11 +239,14 @@ class Pos extends Component {
     const currentItem = {
       id: "_billableItem_" + selectedProduct._id,
       name: selectedProduct.name,
-      unitPrice: selectedProduct.price,
+      unitPrice:
+        selectedProduct.price == undefined ? 0.0 : selectedProduct.price,
       quantity: 1,
-      quantity_on_hand: selectedProduct.quantity - 1,
+      quantity_on_hand:
+        selectedProduct.quantity == undefined ? 0 : selectedProduct.quantity,
       barCode: selectedProduct.barCode,
     };
+    console.log("currentItem: ", currentItem);
     this.addItem(currentItem);
     this.updateTotal();
   };
@@ -303,35 +307,9 @@ class Pos extends Component {
         <div className="mainDiv content">
           <Form style={{ width: "50%" }}>
             <Form.Row>
-              <Form.Group as={Col} controlId="formGridCustomerName">
-                <Form.Label>Customer Name</Form.Label>
-                <Creatable
-                  options={data}
-                  onChange={this.handleEditableSelectChange}
-                />
-              </Form.Group>
-              <Form.Group as={Col} controlId="formGridAddress1">
-                <Form.Label>Address</Form.Label>
-                <Form.Control
-                  placeholder="Address"
-                  onChange={this.handleCustomerAddress}
-                  value={this.state.customer.address}
-                />
-              </Form.Group>
-            </Form.Row>
-
-            <Form.Row>
-              <Form.Group as={Col} id="formGridProduct">
+              <Form.Group as={Col} className="col-md-11" id="formGridProduct">
                 <Form.Label>Select Product</Form.Label>
                 <ProductsDropdown onProductSelect={this.handleProductSelect} />
-              </Form.Group>
-              <Form.Group as={Col} controlId="formGridCustomerPhone">
-                <Form.Label>Customer Phone</Form.Label>
-                <Form.Control
-                  onChange={this.handleCustomerPhone}
-                  value={this.state.customer.phone}
-                  placeholder="Customer's Phone"
-                />
               </Form.Group>
             </Form.Row>
 
@@ -343,7 +321,7 @@ class Pos extends Component {
                   <table className="table-striped fixed_header_pos">
                     <thead>
                       <tr>
-                        <td colSpan="6" className="text-center"></td>
+                        <td colSpan={6} className="text-center"></td>
                       </tr>
                       <tr className="titles">
                         <th className="name">Name</th>

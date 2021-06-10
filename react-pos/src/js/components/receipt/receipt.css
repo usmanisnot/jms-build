@@ -207,23 +207,23 @@ table {
   border-collapse: collapse;
 }
 
-td.description,
-th.description {
-  width: 75px;
-  max-width: 75px;
+td.descriptionReciept,
+th.descriptionReciept {
+  width: 175px;
+  max-width: 175px;
 }
 
-td.quantity,
-th.quantity {
-  width: 40px;
-  max-width: 40px;
+td.quantityReciept,
+th.quantityReciept {
+  width: 140px;
+  max-width: 140px;
   word-break: break-all;
 }
 
-td.price,
-th.price {
-  width: 40px;
-  max-width: 40px;
+td.priceReciept,
+th.priceReciept {
+  width: 140px;
+  max-width: 140px;
   word-break: break-all;
 }
 
@@ -233,8 +233,8 @@ th.price {
 }
 
 .ticket {
-  width: 155px;
-  max-width: 155px;
+  width: 455px;
+  max-width: 455px;
   margin-top: 5px;
 }
 
@@ -257,4 +257,9 @@ img {
   display: block;
   height: 60px;
   width: 160px;
+}
+
+.brandingContainer {
+  display: flex;
+  justify-content: center;
 }
