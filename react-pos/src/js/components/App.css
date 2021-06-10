@@ -424,7 +424,7 @@ ul.nav-menu li {
 
 .barcodeContainer {
   margin: 20px;
-  display: flex;
+  display: flexbox;
   align-items: center;
   justify-content: space-between;
 }

@@ -13,28 +13,45 @@ class BarCodeContainer extends Component {
 
   componentDidMount() {
     console.log("BarCodeContainer", this.props);
+  }
 
-    // this.props.location.state.forEach((element) => {
-    //   return bwipjs.toCanvas(element.barCode, {
-    //     bcid: "code128", // Barcode type
-    //     text: element.barCode, // Text to encode
-    //     scale: 1, // 3x scaling factor
-    //     height: 9, // Bar height, in millimeters
-    //     includetext: true, // Show human-readable text
-    //     textxalign: "center", // Always good to set this
-    //   });
-    //   console.log("item: ", element.barCode);
-    // });
+  getReduced() {
+    return this.props.location.state.reduce(function (
+      result,
+      value,
+      index,
+      array
+    ) {
+      if (index % 2 === 0) result.push(array.slice(index, index + 2));
+      return result;
+    },
+    []);
   }
 
   render() {
-    const items = this.props.location.state;
-    return items.map((item) => (
-      <div className="barcodeContainer">
-        <BarCode barCode={item.barCode} />
-        {/* <canvas style={{ marginTop: 5 }} id={item.barCode}></canvas>; */}
-      </div>
-    ));
+    const items = this.getReduced();
+    console.log("items00", items);
+    return (
+      <table style={{ borderSpacing: 13, borderCollapse: "separate" }}>
+        <tbody>
+          {items.map((TwoItems, i) => (
+            <tr key={i}>
+              {TwoItems.map((item, j) => (
+                <td
+                  style={{
+                    margin: 30,
+                    border: "1px solid red",
+                  }}
+                  key={i * j}
+                >
+                  <BarCode barCode={item.barCode} />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
   }
 }
 
