@@ -60,7 +60,7 @@ class Inventory extends Component {
         },
         {
           headerName: "Listed Price",
-          field: "listedprice",
+          field: "listedPrice",
           sortable: true,
           filter: true,
           editable: true,
