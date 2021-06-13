@@ -14,11 +14,14 @@ class ComponentToPrint extends React.Component {
 
   renderItems() {
     var { items } = this.props;
+    console.log("items: ", items);
     return items.map((item, i) => (
       <tr key={i}>
         <td className="quantityReciept">{item.quantity}</td>
         <td className="descriptionReciept">{item.name}</td>
-        <td className="priceReciept">Rs {item.unitPrice * item.quantity}</td>
+        <td className="priceReciept">
+          Rs {parseFloat(item.unitPrice) * parseInt(item.quantity)}
+        </td>
       </tr>
     ));
   }
@@ -32,7 +35,7 @@ class ComponentToPrint extends React.Component {
         <div className="brandingContainer">
           <div className="branding" />
         </div>
-        <p className="centered">RECEIPT EXAMPLE Address line 1</p>
+        <p className="centered">Club Road, Rahim yar khan</p>
         <table>
           <thead>
             <tr>
@@ -43,7 +46,7 @@ class ComponentToPrint extends React.Component {
           </thead>
           <tbody>{this.renderItems()}</tbody>
         </table>
-        <p className="centered">Thanks for your purchase! parzibyte.me/blog</p>
+        <p className="centered">Thanks for your purchase!</p>
       </div>
     );
   }

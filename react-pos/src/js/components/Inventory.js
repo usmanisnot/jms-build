@@ -26,7 +26,8 @@ class Inventory extends Component {
       code: "",
       snackMessage: "",
       quantity: 1,
-      price: "",
+      listedPrice: 0,
+      purchasePrice: 0,
       stockProvider: "",
       barCode: "NoCode",
       columnDefs: [
@@ -51,8 +52,15 @@ class Inventory extends Component {
           editable: true,
         },
         {
-          headerName: "Price",
-          field: "price",
+          headerName: "Purchase Price",
+          field: "purchasePrice",
+          sortable: true,
+          filter: true,
+          editable: true,
+        },
+        {
+          headerName: "Listed Price",
+          field: "listedprice",
           sortable: true,
           filter: true,
           editable: true,
@@ -126,7 +134,8 @@ class Inventory extends Component {
       name: this.state.name,
       code: this.state.code,
       quantity: this.state.quantity,
-      price: this.state.price,
+      listedPrice: this.state.listedPrice,
+      purchasePrice: this.state.purchasePrice,
       stockProvider: this.state.stockProvider,
       barCode: this.state.barCode,
     };
@@ -167,8 +176,11 @@ class Inventory extends Component {
   handleCode = (e) => {
     this.setState({ code: e.target.value });
   };
-  handlePrice = (e) => {
-    this.setState({ price: e.target.value });
+  handleListedPrice = (e) => {
+    this.setState({ listedPrice: e.target.value });
+  };
+  handlePurchasePrice = (e) => {
+    this.setState({ purchasePrice: e.target.value });
   };
   handleQuantity = (e) => {
     this.setState({ quantity: e.target.value });
@@ -198,16 +210,6 @@ class Inventory extends Component {
 
   render() {
     var { products, snackMessage } = this.state;
-
-    var renderProducts = () => {
-      if (products.length === 0) {
-        return <React.Fragment>{products} </React.Fragment>;
-      } else {
-        return products.map((product) => (
-          <Product {...product} onEditProduct={this.handleEditProduct} />
-        ));
-      }
-    };
 
     return (
       <div>
@@ -259,7 +261,6 @@ class Inventory extends Component {
                 flex: 1,
                 resizable: true,
                 editable: true,
-                headerComponentFramework: SortableHeaderComponent,
                 headerComponentParams: {
                   menuIcon: "fa-bars",
                 },
@@ -302,17 +303,31 @@ class Inventory extends Component {
               </div>
               <div className="form-group">
                 <label className="col-md-4 control-label" htmlFor="price">
-                  Price
+                  Purchase Price
                 </label>
                 <div className="col-md-12">
                   <input
-                    name="price"
+                    name="purchasePrice"
                     placeholder="Price"
                     className="form-control"
-                    onChange={this.handlePrice}
+                    onChange={this.handlePurchasePrice}
                     type="number"
-                    step="any"
-                    min="0"
+                    value={this.state.purchasePrice}
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="col-md-4 control-label" htmlFor="price">
+                  Listed Price
+                </label>
+                <div className="col-md-12">
+                  <input
+                    name="listedPrice"
+                    placeholder="Listed Price"
+                    className="form-control"
+                    onChange={this.handleListedPrice}
+                    type="number"
+                    value={this.state.listedPrice}
                   />
                 </div>
               </div>

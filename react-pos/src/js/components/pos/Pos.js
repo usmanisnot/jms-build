@@ -240,7 +240,9 @@ class Pos extends Component {
       id: "_billableItem_" + selectedProduct._id,
       name: selectedProduct.name,
       unitPrice:
-        selectedProduct.price == undefined ? 0.0 : selectedProduct.price,
+        selectedProduct.listedPrice == undefined
+          ? 0.0
+          : parseFloat(selectedProduct.listedPrice),
       quantity: 1,
       quantity_on_hand:
         selectedProduct.quantity == undefined ? 0 : selectedProduct.quantity,
