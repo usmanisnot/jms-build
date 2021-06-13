@@ -5,7 +5,7 @@ import Product from "./Product";
 import axios from "axios";
 import { Modal, Button } from "react-bootstrap";
 
-import { AgGridReact, SortableHeaderComponent } from "ag-grid-react";
+import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import productButtonRender from "./productButtonRender";
