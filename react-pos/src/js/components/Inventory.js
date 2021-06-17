@@ -5,7 +5,7 @@ import Product from "./Product";
 import axios from "axios";
 import { Modal, Button } from "react-bootstrap";
 
-import { AgGridReact, SortableHeaderComponent } from "ag-grid-react";
+import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import productButtonRender from "./productButtonRender";
@@ -22,7 +22,7 @@ class Inventory extends Component {
       name: "",
       snackMessage: "",
       quantity: 1,
-      price: "",
+      price: 0,
       stockProvider: "",
       barCode: "",
       columnDefs: [
@@ -74,12 +74,6 @@ class Inventory extends Component {
         },
       ],
     };
-
-    this.handleNewProduct = this.handleNewProduct.bind(this);
-    this.handleName = this.handleName.bind(this);
-    this.handlePrice = this.handlePrice.bind(this);
-    this.handleQuantity = this.handleQuantity.bind(this);
-    this.handleSnackbar = this.handleSnackbar.bind(this);
   }
 
   handleNameEditinGrid(params) {}
@@ -200,8 +194,8 @@ class Inventory extends Component {
               columnDefs={this.state.columnDefs}
               rowData={this.state.products}
               animateRows
-              showToolPanel="true"
-              enableSorting="true"
+              showToolPanel={true}
+              enableSorting={true}
               editType="fullRow"
               onCellValueChanged={this.handleonCellValueChanged}
               defaultColDef={{
@@ -210,7 +204,6 @@ class Inventory extends Component {
                 flex: 1,
                 resizable: true,
                 editable: true,
-                headerComponentFramework: SortableHeaderComponent,
                 headerComponentParams: {
                   menuIcon: "fa-bars",
                 },
@@ -218,30 +211,8 @@ class Inventory extends Component {
             ></AgGridReact>
           </div>
         </div>
-        {/* <div className="container">
-          <a
-            className="btn btn-success pull-right"
-            onClick={() => this.setState({ productFormModal: true })}
-          >
-            <i className="glyphicon glyphicon-plus" /> Add New Item
-          </a>
-          <br />
-          <br />
 
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Price</th>
-                <th scope="col">Quantity on Hand</th>
-                <th />
-              </tr>
-            </thead>
-            { <tbody>{renderProducts()}</tbody> }
-          </table>
-        </div> */}
-
-        <Modal show={this.state.productFormModal}>
+        <Modal size="lg" show={this.state.productFormModal}>
           <Modal.Header>
             <Modal.Title>Add Product</Modal.Title>
           </Modal.Header>

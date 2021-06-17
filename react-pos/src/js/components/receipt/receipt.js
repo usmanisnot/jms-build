@@ -76,7 +76,7 @@ class ComponentToPrint extends React.Component {
                   </div>
                 </div>
               </div>
-              <table border="0" cellspacing="0" cellPadding="0">
+              <table cellSpacing="0" cellPadding="0">
                 <thead>
                   <tr>
                     <th>#</th>
@@ -89,23 +89,23 @@ class ComponentToPrint extends React.Component {
                 <tbody>{this.renderItems()}</tbody>
                 <tfoot>
                   <tr className="hidden">
-                    <td colSpan="2"></td>
-                    <td colSpan="2">SUBTOTAL</td>
+                    <td colSpan={2}></td>
+                    <td colSpan={2}>SUBTOTAL</td>
                     <td> Rs {total}</td>
                   </tr>
                   <tr className="hidden">
-                    <td colSpan="2"></td>
-                    <td colSpan="2">TAX 0%</td>
+                    <td colSpan={2}></td>
+                    <td colSpan={2}>TAX 0%</td>
                     <td>RS 00.00</td>
                   </tr>
                   <tr>
-                    <td colSpan="2"></td>
-                    <td colSpan="2">GRAND TOTAL</td>
+                    <td colSpan={2}></td>
+                    <td colSpan={2}>GRAND TOTAL</td>
                     <td> Rs {total}</td>
                   </tr>
                   <tr>
-                    <td colSpan="2"></td>
-                    <td colSpan="2">TOTAL PAID</td>
+                    <td colSpan={2}></td>
+                    <td colSpan={2}>TOTAL PAID</td>
                     <td> Rs {totalPayment}</td>
                   </tr>
                 </tfoot>
@@ -149,10 +149,15 @@ class Slip extends React.Component {
     this.getBalance();
   };
   getBalance = () => {
-    var url = HOST + `/api/balance/` + this.state.customer.phone;
-    axios.get(url).then((response) => {
-      this.setState({ previousBalance: response.data.previousBalance });
-    });
+    console.log("st:", this.state);
+    if(this.state.customer.phone != ""){
+      var url = HOST + `/api/balance/` + this.state.customer.phone;
+      axios.get(url).then((response) => {
+        this.setState({ previousBalance: response.data.previousBalance });
+      });
+    }else{
+      this.setState({ previousBalance: parseFloat(this.state.totalPayment) - parseFloat(this.state.total) });
+    }
   };
 
   render() {
