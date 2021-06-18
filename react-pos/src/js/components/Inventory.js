@@ -8,6 +8,7 @@ import { Modal, Button } from "react-bootstrap";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
+import Select from "react-select";
 import productButtonRender from "./productButtonRender";
 
 const HOST = "http://localhost:8001";
@@ -25,6 +26,13 @@ class Inventory extends Component {
       price: 0,
       stockProvider: "",
       barCode: "",
+      options:[
+        {label: "Kilogram", value: "kgs"},
+        {label: "Meter", value: "mtr"},
+        {label: "Liter", value: "ltr"},
+        {label: "Pieces  -  units that are not measurable by any of above.", value: "pcs"},
+      ],
+      unit: {},
       columnDefs: [
         {
           headerName: "Name",
@@ -49,6 +57,13 @@ class Inventory extends Component {
         {
           headerName: "Quantity",
           field: "quantity",
+          sortable: true,
+          filter: true,
+          editable: true,
+        },
+        {
+          headerName: "Units",
+          field: "unit.value",
           sortable: true,
           filter: true,
           editable: true,
@@ -99,6 +114,7 @@ class Inventory extends Component {
       price: this.state.price,
       stockProvider: this.state.stockProvider,
       barCode: this.state.barCode,
+      unit: this.state.unit,
     };
 
     axios
@@ -146,6 +162,9 @@ class Inventory extends Component {
   handleBarCode = (e) => {
     this.setState({ barCode: e.target.value });
   };
+  handleUnits = (selectValue) => {
+    this.setState({ unit: selectValue });
+  }
   handleSnackbar = () => {
     var bar = document.getElementById("snackbar");
     bar.className = "show";
@@ -218,7 +237,7 @@ class Inventory extends Component {
           </Modal.Header>
           <Modal.Body>
             <form className="form-horizontal" name="newProductForm">
-              <div className="form-group">
+              <div style={{display: 'none'}} className="form-group">
                 <label className="col-md-4 control-label" htmlFor="barcode">
                   Barcode
                 </label>
@@ -276,6 +295,24 @@ class Inventory extends Component {
                     onChange={this.handleQuantity}
                     className="form-control"
                   />
+                </div>
+              </div>
+              <div className="form-group">
+                <label
+                  className="col-md-8 control-label"
+                  htmlFor="units"
+                >
+                  Units
+                </label>
+                <div className="col-md-12">
+                  <Select
+                  options={this.state.options}
+                  onChange={this.handleUnits}
+                  value={this.state.selectedUnit}
+                  id="units"
+                  className=""
+                  placeholder="Units"
+                />
                 </div>
               </div>
               <div className="form-group">

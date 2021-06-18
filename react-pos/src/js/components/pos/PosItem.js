@@ -20,8 +20,14 @@ class PosItem extends Component {
       this.props.onChange(id, e.target.value);
     }
   };
+
+  handleChangePrice = (id, e) => {
+    console.log("handleChangePrice: ", id)
+    this.props.onChangePrice(id, e.target.value);
+  };
   render() {
-    const { id, name, unitPrice, quantity, quantity_on_hand } = this.props;
+    console.log("this.props: ",this.props)
+    const { id, name, unitPrice, quantity, quantity_on_hand, unit } = this.props;
     var itemNumber = quantity;
     return (
       <tr>
@@ -30,8 +36,12 @@ class PosItem extends Component {
           {name}
         </td>
         <td className="unitPrice" defaultValue="0.00">
-          {" "}
-          {unitPrice}{" "}
+          <input
+              style={{ width: "75px" }}
+              type="number"
+              onChange={(e) => this.handleChangePrice(id, e)}
+              value={unitPrice}
+            />
         </td>
         <td className="quantity">
           <div>
@@ -41,6 +51,7 @@ class PosItem extends Component {
               onChange={(e) => this.handleChangeQuantity(id, e)}
               value={itemNumber}
             />
+            <span style={{marginLeft: '10px'}}>({unit != undefined ? unit.value : ''})</span>
           </div>
         </td>
         <td className="quantityAvailable">{quantity_on_hand - quantity}</td>

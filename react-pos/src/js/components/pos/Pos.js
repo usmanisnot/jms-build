@@ -170,6 +170,18 @@ class Pos extends Component {
     }
   };
 
+  handleChangeItemPrice = (id, value) => {
+    var items = this.state.items;
+    for (var i = 0; i < items.length; i++) {
+        if (items[i].id === id) {
+          items[i].unitPrice = value;
+          this.setState({ items: items }, () => {
+            this.updateTotal();
+          });
+        }
+      }
+  };
+
   updateTotal = () => {
     var items = this.state.items;
     var totalCost = 0;
@@ -231,6 +243,7 @@ class Pos extends Component {
       quantity: 1,
       quantity_on_hand: selectedProduct.quantity == undefined ? 0 : selectedProduct.quantity,
       barCode: selectedProduct.barCode,
+      unit: selectedProduct.unit
     };
     this.addItem(currentItem);
     this.updateTotal();
@@ -280,7 +293,7 @@ class Pos extends Component {
         );
       } else {
         return items.map((item) => (
-          <PosItem key={item.id} {...item} onChange={this.handleChange} />
+          <PosItem key={item.id} {...item} onChange={this.handleChange} onChangePrice={this.handleChangeItemPrice} />
         ));
       }
     };
@@ -289,8 +302,8 @@ class Pos extends Component {
       <div>
         <Header />
         <div className="mainDiv content">
-          <Form style={{ width: "50%" }}>
-            <Form.Row>
+          <Form style={{width: '80%'}}>
+            <Form.Row style={{width: '91%'}}>
               <Form.Group as={Col} controlId="formGridCustomerName">
                 <Form.Label>Customer Name</Form.Label>
                 <Creatable
@@ -308,7 +321,7 @@ class Pos extends Component {
               </Form.Group>
             </Form.Row>
 
-            <Form.Row>
+            <Form.Row style={{width: '91%'}}>
               <Form.Group as={Col} id="formGridProduct">
                 <Form.Label>Select Product</Form.Label>
                 <ProductsDropdown onProductSelect={this.handleProductSelect} />
@@ -371,11 +384,13 @@ class Pos extends Component {
 
             <Form.Row>
               <Form.Group>
-                <Form.Label className="checkout-total-price">
+                <div>
+                  <Form.Label className="checkout-total-price pull-left">
                   Total paid:
                 </Form.Label>
                 <Form.Control
                   name="payment"
+                  className="pull-right"
                   onChange={(event) =>
                     this.setState({
                       totalPayment: event.target.value,
@@ -383,8 +398,11 @@ class Pos extends Component {
                   }
                   value={this.state.totalPayment}
                 />
+                </div>
               </Form.Group>
             </Form.Row>
+
+
 
             <Button
               className="btn btn-primary btn-lg lead"
