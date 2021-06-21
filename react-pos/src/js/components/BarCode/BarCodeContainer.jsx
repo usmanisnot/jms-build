@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import "../App.css";
-import bwipjs from "bwip-js";
 import BarCode from "./BarCode";
-import BarCodePrinter from "./BarCodePrinter";
 
 class BarCodeContainer extends Component {
   constructor(props) {
@@ -12,7 +10,7 @@ class BarCodeContainer extends Component {
   componentWillMount() {}
 
   componentDidMount() {
-    console.log("BarCodeContainer", this.props);
+    //console.log("BarCodeContainer", this.props);
   }
 
   getReduced() {
@@ -44,7 +42,7 @@ class BarCodeContainer extends Component {
                   }}
                   key={i * j}
                 >
-                  <BarCode barCode={item.barCode} />
+                  <BarCode item={item} />
                 </td>
               ))}
             </tr>

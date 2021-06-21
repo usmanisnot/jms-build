@@ -1,12 +1,8 @@
 var app = require("express")();
-var server = require("http").Server(app);
 var bodyParser = require("body-parser");
 var Datastore = require("nedb");
 
 var Inventory = require("./inventory");
-
-const ThermalPrinter = require("node-thermal-printer").printer;
-const PrinterTypes = require("node-thermal-printer").types;
 
 app.use(bodyParser.json());
 
@@ -113,11 +109,6 @@ app.post("/new", function (req, res) {
   });
 });
 
-app.post("/print", function (req, res) {
-  var transactionToPrint = req.body;
-  res.send(printReciept(transactionToPrint));
-});
-
 // GET a single transaction
 app.get("/:transactionId", function (req, res) {
   Transactions.find({ _id: req.params.transactionId }, function (err, doc) {
@@ -172,31 +163,4 @@ function removeDuplicates(myArr, prop) {
   return myArr.filter((obj, pos, arr) => {
     return arr.map((mapObj) => mapObj[prop]).indexOf(obj[prop]) === pos;
   });
-}
-
-function printReciept(transaction) {
-  try {
-    let printer = new ThermalPrinter({
-      type: PrinterTypes.STAR, // Printer type: 'star' or 'epson'
-      interface: "tcp://xxx.xxx.xxx.xxx", // Printer interface
-      characterSet: "SLOVENIA", // Printer character set - default: SLOVENIA
-      removeSpecialCharacters: false, // Removes special characters - default: false
-      lineCharacter: "=", // Set character for lines - default: "-"
-      options: {
-        // Additional options
-        timeout: 5000, // Connection timeout (ms) [applicable only for network printers] - default: 3000
-      },
-    });
-    printer.print("Hello World");
-    printer.println("Hello World");
-    printer.partialCut();
-    return { code: "OK", desc: "ok" };
-  } catch (e) {
-    {
-      return {
-        code: "ERROR",
-        desc: e,
-      };
-    }
-  }
 }

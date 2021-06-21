@@ -87,13 +87,13 @@ class Slip extends React.Component {
           Back
         </button>
 
-        <button
+        {/* <button
           className="btn btn-info"
           style={{ margin: 10 }}
           onClick={() => this.getPrinter()}
         >
           Print thermal
-        </button>
+        </button> */}
 
         <ReactToPrint
           trigger={() => <button className="btn btn-primary">Print</button>}

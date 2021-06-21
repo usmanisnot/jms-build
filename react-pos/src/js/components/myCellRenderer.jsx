@@ -1,5 +1,4 @@
 import React from "react";
-import bwipjs from "bwip-js";
 import { Modal, Button } from "react-bootstrap";
 import BarCode from "./BarCode/BarCode.jsx";
 import { Link } from "react-router-dom";
