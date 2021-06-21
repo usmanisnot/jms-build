@@ -15,7 +15,7 @@ function BarCode(props) {
         }
       });
 
-  return <canvas style={{ marginTop: 5 }} id={barCode} ref={inputRef} />;
+  return <svg style={{ marginTop: 5 }} id={barCode} ref={inputRef} />;
 };
 
 export default BarCode;

@@ -27,28 +27,15 @@ class BarCodeContainer extends Component {
   }
 
   render() {
-    const items = this.getReduced();
+    console.log("items before", this.props.location.state);
+    const items = this.props.location.state;
     console.log("items00", items);
     return (
-      <table style={{ borderSpacing: 13, borderCollapse: "separate" }}>
-        <tbody>
-          {items.map((TwoItems, i) => (
-            <tr key={i}>
-              {TwoItems.map((item, j) => (
-                <td
-                  style={{
-                    margin: 30,
-                    border: "1px solid red",
-                  }}
-                  key={i * j}
-                >
-                  <BarCode item={item} />
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div style={{ margin: 10, padding: 20, width: '800'}}>
+        {items.map((item, i) => (
+          <BarCode item={item} />
+        ))}
+      </div>
     );
   }
 }
