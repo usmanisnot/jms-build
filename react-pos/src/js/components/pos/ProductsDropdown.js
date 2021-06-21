@@ -43,8 +43,9 @@ class ProductsDropdown extends Component {
     return result;
   };
   componentWillMount() {
-    var url = HOST + `/api/inventory/products`;
+    var url = HOST + `/api/inventory/all`;
     axios.get(url).then((response) => {
+      console.log("re: ",response)
       let data = this.mapOnSelectData(response.data);
       this.setState({ options: data }, () => {
         console.log("state updated: ", response);

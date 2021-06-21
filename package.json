@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepublish": "npm run build",
     "publish": "gh-pages -d react-pos/build",
-	"start": "node index.js",
+    "start": "node index.js",
     "build": "cd react-pos && npm install && npm run build"
   },
   "author": "Krissanawat",
@@ -22,6 +22,6 @@
     "nedb": "^1.8.0",
     "nodemon": "^1.14.12",
     "path": "^0.12.7",
-    "socket.io": "^2.0.4"
+    "socket.io": "^2.4.1"
   }
 }

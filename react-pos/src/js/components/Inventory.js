@@ -18,7 +18,7 @@ class Inventory extends Component {
     super(props);
 
     this.state = {
-      products: [],
+      inventory: [],
       productFormModal: false,
       name: "",
       snackMessage: "",
@@ -94,14 +94,14 @@ class Inventory extends Component {
   handleNameEditinGrid(params) {}
 
   componentWillMount() {
-    //get all products from server
-    this.refreshAllProducts();
+    //get all inventory from server
+    this.refreshAllInventory();
   }
-  refreshAllProducts() {
-    var url = HOST + `/api/inventory/products`;
+  refreshAllInventory() {
+    var url = HOST + `/api/inventory/all`;
     axios.get(url).then((response) => {
-      this.setState({ products: response.data }, () =>
-        console.log("state products: ", this.state)
+      this.setState({ inventory: response.data }, () =>
+        console.log("state inventory: ", this.state)
       );
     });
   }
@@ -118,11 +118,11 @@ class Inventory extends Component {
     };
 
     axios
-      .post(HOST + `/api/inventory/product`, newProduct)
+      .post(HOST + `/api/inventory/new`, newProduct)
       .then((response) => {
         this.setState({ snackMessage: "Product Added Successfully!" });
         console.log("then", response);
-        this.refreshAllProducts();
+        this.refreshAllInventory();
         this.handleSnackbar();
       })
       .catch((err) => {
@@ -132,8 +132,9 @@ class Inventory extends Component {
       });
   };
   handleEditProduct = (editProduct) => {
+    console.log("handle edit")
     axios
-      .put(HOST + `/api/inventory/product`, editProduct)
+      .put(HOST + `/api/inventory/update`, editProduct)
       .then((response) => {
         this.setState({ snackMessage: "Product Updated Successfully!" });
         this.handleSnackbar();
@@ -178,13 +179,13 @@ class Inventory extends Component {
   };
 
   render() {
-    var { products, snackMessage } = this.state;
+    var { inventory, snackMessage } = this.state;
 
-    var renderProducts = () => {
-      if (products.length === 0) {
-        return <React.Fragment>{products} </React.Fragment>;
+    var renderinventory = () => {
+      if (inventory.length === 0) {
+        return <React.Fragment>{inventory} </React.Fragment>;
       } else {
-        return products.map((product) => (
+        return inventory.map((product) => (
           <Product {...product} onEditProduct={this.handleEditProduct} />
         ));
       }
@@ -203,15 +204,17 @@ class Inventory extends Component {
               margin: "5px",
             }}
           >
-            <input
-              type="button"
-              className="btn btn-success"
-              value="Add new"
-              onClick={() => this.setState({ productFormModal: true })}
-            />
+            <div className="form-group" >
+              <input
+                type="button"
+                className="btn btn-success"
+                value="Add new"
+                onClick={() => this.setState({ productFormModal: true })}
+              />
+            </div>
             <AgGridReact
               columnDefs={this.state.columnDefs}
-              rowData={this.state.products}
+              rowData={this.state.inventory}
               animateRows
               showToolPanel={true}
               enableSorting={true}

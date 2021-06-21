@@ -51,7 +51,7 @@ class PosItem extends Component {
               onChange={(e) => this.handleChangeQuantity(id, e)}
               value={itemNumber}
             />
-            <span style={{marginLeft: '10px'}}>({unit != undefined ? unit.value : ''})</span>
+            <span style={{marginLeft: '10px'}}>{unit != undefined ? '(' + unit.value + ')' : ''}</span>
           </div>
         </td>
         <td className="quantityAvailable">{quantity_on_hand - quantity}</td>

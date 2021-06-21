@@ -57,6 +57,9 @@ app.get("/*", function (req, res, next) {
 
 app.use("/api/inventory", require("./api/inventory"));
 app.use("/api", require("./api/transactions"));
+app.use("/api/product", require("./api/products"));
+app.use("/api/supplier", require("./api/suppliers"));
+app.use("/api/customer", require("./api/customers"));
 
 // Websocket logic for Live Cart
 io.on("connection", function (socket) {

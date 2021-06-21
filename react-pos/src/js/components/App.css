@@ -344,7 +344,7 @@ ul.nav-menu li a h3 {
 }
 
 .fixed_header_pos {
-  /* width: 80%; */
+  width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
 }
@@ -368,37 +368,37 @@ ul.nav-menu li a h3 {
 
 .fixed_header_pos th.name,
 .fixed_header_pos td.name {
-  width: 350px;
   text-align: left;
   padding: 5px;
+  width: 30%;
 }
 .fixed_header_pos th.unitPrice,
 .fixed_header_pos td.unitPrice {
-  width: 150px;
+  width: 10%;
 }
 .fixed_header_pos th.quantity,
 .fixed_header_pos td.quantity {
-  width: 150px;
+  width: 15%;
   text-align: left;
 }
 .fixed_header_pos th.quantityAvailable,
 .fixed_header_pos td.quantityAvailable {
-  width: 200px;
+  width: 15%;
   text-align: left;
 }
 .fixed_header_pos th.tax,
 .fixed_header_pos td.tax {
-  width: 100px;
+  width: 10%;
   text-align: left;
 }
 .fixed_header_pos th.total,
 .fixed_header_pos td.total {
-  width: 100px;
+  width: 10%;
   text-align: left;
 }
 .fixed_header_pos th.delete,
 .fixed_header_pos td.delete {
-  width: 100px;
+  width: 10%;
   text-align: left;
 }
 
