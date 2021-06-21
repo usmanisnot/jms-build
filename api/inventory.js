@@ -1,5 +1,4 @@
 var app = require("express")();
-var server = require("http").Server(app);
 var bodyParser = require("body-parser");
 var Datastore = require("nedb");
 var async = require("async");
@@ -14,87 +13,99 @@ var inventoryDB = new Datastore({
   autoload: true,
 });
 
-// GET inventory
-app.get("/", function (req, res) {
-  res.send("Inventory API");
-});
 
-// GET a product from inventory by _id
-app.get("/product/:productId", function (req, res) {
-  if (!req.params.productId) {
-    res.status(500).send("ID field is required.");
-  } else {
-    inventoryDB.findOne({ _id: req.params.productId }, function (err, product) {
-      res.send(product);
-    });
+// GET all inventory
+app.get("/all", function (req, res) {
+  try{
+    inventoryDB.find({}, function (err, docs) {
+    console.log("sending inventory");
+    res.send(docs);
+  });
+  }catch(e){
+    console.log("catch", e);
   }
 });
 
-// GET all inventory products
-app.get("/products", function (req, res) {
-  inventoryDB.find({}, function (err, docs) {
-    console.log("sending inventory products");
-    res.send(docs);
-  });
+
+// GET a inventory from inventory by _id
+app.get("/:itemId", function (req, res) {
+  try{
+    if (!req.params.itemId) {
+      res.status(500).send("ID field is required.");
+    } else {
+    inventoryDB.findOne({ _id: req.params.itemId }, function (err, inventory) {
+      res.send(inventory);
+    });
+  }
+  }
+  catch(e){
+
+  }
 });
 
-// GET all inventory products
-app.get("/products/search", function (req, res) {
+// GET all inventory inventorys
+app.get("/search", function (req, res) {
   inventoryDB.find({ name: new RegExp(req.query.term) }, function (err, docs) {
-    console.log("searching inventory products");
+    // console.log("searching inventory inventorys");
     res.send(docs);
   });
 });
 
-// post inventory product
-app.post("/product", function (req, res) {
-  var newProduct = req.body;
+// post inventory new item
+app.post("/new", function (req, res) {
+  var newinventory = req.body;
 
-  inventoryDB.insert(newProduct, function (err, product) {
+  inventoryDB.insert(newinventory, function (err, inventory) {
     if (err) res.status(500).send(err);
-    else res.send(product);
+    else res.send(inventory);
   });
 });
 
-//delete product using product id
-app.delete("/product/:productId", function (req, res) {
-  inventoryDB.remove({ _id: req.params.productId }, function (err, numRemoved) {
+//delete inventory using inventory id
+app.delete("/:itemId", function (req, res) {
+  inventoryDB.remove({ _id: req.params.itemId }, function (err, numRemoved) {
     if (err) res.status(500).send(err);
     else res.sendStatus(200);
   });
 });
 
-// Updates inventory product
-app.put("/product", function (req, res) {
-  var productId = req.body._id;
+// Updates inventory inventory
+app.put("/update", function (req, res) {
+  var inventoryId = req.body._id;
 
   inventoryDB.update(
-    { _id: productId },
+    { _id: inventoryId },
     req.body,
     {},
-    function (err, numReplaced, product) {
+    function (err, numReplaced, inventory) {
       if (err) res.status(500).send(err);
       else res.sendStatus(200);
     }
   );
 });
 
-app.decrementInventory = function (products) {
-  async.eachSeries(products, function (transactionProduct, callback) {
+// GET inventory
+app.get("/", function (req, res) {
+  // console.log("inside inventory /");
+  res.send("Inventory API");
+});
+
+app.decrementInventory = function (items) {
+  async.eachSeries(items, function (item, callback) {
     inventoryDB.findOne(
-      { _id: transactionProduct.id.replace("_billableItem_", "") },
-      function (err, product) {
-        console.log("product: ", product);
+      { _id: item.id.replace("_billableItem_", "") },
+      function (err, inventory) {
+        console.log("inventory: ", inventory);
         // catch manually added items (don't exist in inventory)
-        if (!product || !product.quantity) {
+        if (!inventory || !inventory.quantity) {
           callback();
         } else {
           var updatedQuantity =
-            parseInt(product.quantity) - parseInt(transactionProduct.quantity);
+            parseInt(inventory.quantity) - parseInt(item.quantity);
           console.log("updatedQuantity: ", updatedQuantity);
-          console.log("transactionProduct: ", transactionProduct);
+          console.log("transactioninventory: ", updatedQuantity);
           inventoryDB.update(
-            { _id: product._id },
+            { _id: inventory._id },
             { $set: { quantity: updatedQuantity } },
             {},
             callback

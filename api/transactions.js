@@ -1,9 +1,9 @@
 var app = require("express")();
-var server = require("http").Server(app);
 var bodyParser = require("body-parser");
 var Datastore = require("nedb");
 
 var Inventory = require("./inventory");
+var Customers = require("./customers");
 
 app.use(bodyParser.json());
 
@@ -21,6 +21,7 @@ var Transactions = new Datastore({
 
 // GET all transactions
 app.get("/all", function (req, res) {
+  // console.log("sending transactions");
   Transactions.find({}, function (err, docs) {
     res.send(docs);
   });
@@ -102,6 +103,7 @@ app.post("/new", function (req, res) {
   var newTransaction = req.body;
 
   Transactions.insert(newTransaction, function (err, transaction) {
+    var reply = Customers.InsertCustomer(transaction.customer)
     if (err) res.status(500).send(err);
     else {
       res.sendStatus(200);
@@ -144,19 +146,6 @@ app.get("/balance/:customerId", function (req, res) {
       }
     });
     res.send({ previousBalance: balanceDue });
-  });
-});
-
-app.get("/customers/all", function (req, res) {
-  var customers = [];
-  Transactions.find({}, function (err, docs) {
-    docs.forEach((element) => {
-      if (element.customer) {
-        customers.push(element.customer);
-      }
-    });
-
-    res.send(removeDuplicates(customers, "phone"));
   });
 });
 
