@@ -1,6 +1,5 @@
 import React from "react";
 import ReactToPrint from "react-to-print";
-import Moment from "react-moment";
 import axios from "axios";
 import "./receipt.css";
 

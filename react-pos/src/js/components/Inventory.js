@@ -149,8 +149,8 @@ class Inventory extends Component {
         this.handleSnackbar();
       })
       .catch((err) => {
-        console.log(err),
-          this.setState({ snackMessage: "Product failed to save" }),
+          console.log(err);
+          this.setState({ snackMessage: "Product failed to save" });
           this.handleSnackbar();
       });
   };
@@ -164,8 +164,8 @@ class Inventory extends Component {
       })
       .catch((err) => {
         console.log(err);
-        this.setState({ snackMessage: "Product Update Failed!" }),
-          this.handleSnackbar();
+        this.setState({ snackMessage: "Product Update Failed!" });
+        this.handleSnackbar();
         return false;
       });
   };
