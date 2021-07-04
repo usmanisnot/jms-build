@@ -5,7 +5,7 @@ import Header from "./Header";
 import axios from "axios";
 import RecentTransactions from "./RecentTransactions";
 import LiveTransactions from "./LiveTransactions";
-import moment from "moment";
+// import moment from "moment";
 
 const HOST = "http://localhost:8001";
 var url = HOST + `/api/all`;
@@ -44,7 +44,7 @@ class LiveCart extends Component {
       }
     };
     var renderDate = () => {
-      return moment().format("DD-MMM-YYYY HH:mm:ss");
+			return "12 june";//moment().format("DD-MMM-YYYY HH:mm:ss");
     };
     var renderLiveTransactions = () => {
       if (liveTransactions.length === 0) {

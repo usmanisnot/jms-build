@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Modal, Button } from "react-bootstrap";
 import "./App.css";
 import TransactionDetail from "./TransactionDetail";
-import Moment from "react-moment";
+// import Moment from "react-moment";
 import axios from "axios";
 
 const HOST = "http://localhost:8001";
@@ -61,9 +61,9 @@ class CompleteTransactions extends Component {
           <td className="name">{customer ? customer.name : ""}</td>
           <td className="time">
             {" "}
-            <Moment local format="HH:MM A @ D MMM YYYY">
+            {/* <Moment local format="HH:MM A @ D MMM YYYY">
               {date}
-            </Moment>
+            </Moment> */}
           </td>
           <td className="total"> {total} </td>
           <td className="balance"> {totalPayment - total} </td>

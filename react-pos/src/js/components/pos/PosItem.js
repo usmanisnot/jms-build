@@ -1,10 +1,13 @@
 import React, { Component } from "react";
+import { Button, Modal } from "react-bootstrap";
 import "../App.css";
 
 class PosItem extends Component {
   constructor(props) {
     super(props);
-    this.state = { allowDecreaseQuantity: true };
+		this.state = {
+			allowDecreaseQuantity: true, discountOpen: false, discountType: 'fix', discountAmount: 0, totalDiscount: 0.0,
+		};
   }
   handleChange = (id, itemNumber) => {
     debugger;
@@ -19,12 +22,73 @@ class PosItem extends Component {
     ) {
       this.props.onChange(id, e.target.value);
     }
-  };
+	};
+
+	getTotal = () => {
+		return this.props.unitPrice * this.props.quantity;
+	}
+
+	discountChanged = (e) => {
+		console.log("discountChanged:", e)
+		this.updateDiscount(this.state.discountType, this.state.discountAmount);
+	}
+
+	updateDiscount = (type, amount) => {
+		if (type == 'per') {
+			this.setState({ totalDiscount: this.getTotal() * (amount / 100)}, () => {console.log("total d upd: ",this.state.totalDiscount)});
+		} else {
+			this.setState({ totalDiscount: amount}, () => {console.log("total d upd: ",this.state.totalDiscount)});
+		}
+	}
+
+	handleClose = (e) => {
+		this.setState({ discountOpen: false });
+		this.props.updateDiscount(this.props.id, this.state.totalDiscount);
+	};
   render() {
-    const { id, name, unitPrice, quantity, quantity_on_hand } = this.props;
+    const { id, name, unitPrice, quantity, quantity_on_hand, purchasePrice } = this.props;
     var itemNumber = quantity;
     return (
-      <tr>
+			<tr>
+				<Modal show={this.state.discountOpen} onHide={this.handleClose}>
+					<Modal.Header closeButton>
+						<Modal.Title>Enter Discount</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						<div className="form-group">
+							<div>
+								<select
+									style={{ width: "75px" }}
+									className="form-control"
+									onChange={(e) => this.setState({discountType: e.target.value}, this.discountChanged)}
+									value={this.state.discountType}>
+									<option value="fix">Fixed</option>
+  								<option value="per">Percentage %</option>
+								</select>
+								<input
+								style={{ width: "75px" }}
+								type="number"
+								className="form-control"
+								minLength={0}
+								onChange={(e) => this.setState({discountAmount: e.target.value}, this.discountChanged)}
+								value={this.state.discountAmount}
+								/>
+							</div>
+							<div className="">
+								<p style={{ fontSize: 11, color: "red" }}>Purchased on: {purchasePrice}</p>
+								<p style={{ fontSize: 11, color: "green" }}>Total discount: {purchasePrice}</p>
+							</div>
+						</div>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button variant="secondary" onClick={this.handleClose}>
+							Close
+						</Button>
+						<Button variant="primary" onClick={this.handleClose}>
+							Save Changes
+						</Button>
+					</Modal.Footer>
+				</Modal>
         <td className="name" defaultValue="">
           {" "}
           {name}
@@ -61,16 +125,17 @@ class PosItem extends Component {
         <td className="quantityAvailable">{quantity_on_hand - quantity}</td>
         <td className="tax">0.00</td>
         <td defaultValue="0.00" className="col-md-2 total">
-          {unitPrice * quantity}
+          {this.getTotal()}
         </td>
         <td defaultValue="0.00" className="delete">
           <button
             className="btn btn-danger"
             onClick={() => this.handleChange(id, "delete")}
           >
-            Delete
+            X
             <i className="glyphicon glyphicon-trash" />
-          </button>
+					</button>
+					<Button onClick={() => this.setState({ discountOpen: true })}style={{margin: 2}} variant="success">%</Button>{' '}
         </td>
       </tr>
     );

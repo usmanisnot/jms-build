@@ -3,7 +3,7 @@ import "../App.css";
 import Header from "../Header";
 import io from "socket.io-client";
 import axios from "axios";
-import moment from "moment";
+// import moment from "moment";
 import { Table, Modal, Button, Form, Col, Row } from "react-bootstrap";
 import PosItem from "./PosItem";
 import ProductsDropdown from "./ProductsDropdown";
@@ -203,7 +203,7 @@ class Pos extends Component {
 
   getCurrentTransaction = () => {
     return {
-      date: moment().format("DD-MMM-YYYY HH:mm:ss"),
+			date: "6 july",// moment().format("DD-MMM-YYYY HH:mm:ss"),
       total: this.state.total,
       totalPayment: this.state.totalPayment,
       items: this.getSubmitableItems(),
@@ -246,7 +246,9 @@ class Pos extends Component {
       quantity: 1,
       quantity_on_hand:
         selectedProduct.quantity == undefined ? 0 : selectedProduct.quantity,
-      barCode: selectedProduct.barCode,
+			barCode: selectedProduct.barCode,
+			purchasePrice: selectedProduct.purchasePrice == undefined ? 0.0 : parseFloat(selectedProduct.purchasePrice),
+			totalDiscount: 0,
     };
     console.log("currentItem: ", currentItem);
     this.addItem(currentItem);
@@ -273,7 +275,11 @@ class Pos extends Component {
       selectedData = { name: option.label, address: "", phone: "" };
     }
     this.selectCustomer(selectedData);
-  };
+	};
+	
+	updateDiscount = (itemId, discount) => {
+		console.log("itemId, discount: ", itemId + ' -- ' + discount);
+	}
 
   render() {
     var { quantity, modal, items } = this.state;
@@ -298,7 +304,7 @@ class Pos extends Component {
         );
       } else {
         return items.map((item) => (
-          <PosItem key={item.id} {...item} onChange={this.handleChange} />
+					<PosItem key={item.id} {...item} onChange={this.handleChange} updateDiscount={this.updateDiscount}/>
         ));
       }
     };
