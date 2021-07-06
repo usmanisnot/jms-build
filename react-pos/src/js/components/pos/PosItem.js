@@ -6,7 +6,7 @@ class PosItem extends Component {
   constructor(props) {
     super(props);
 		this.state = {
-			allowDecreaseQuantity: true, discountOpen: false, discountType: 'fix', discountAmount: 0, totalDiscount: 0.0,
+			allowDecreaseQuantity: true, discountOpen: false,
 		};
   }
   handleChange = (id, itemNumber) => {
@@ -28,25 +28,16 @@ class PosItem extends Component {
 		return this.props.unitPrice * this.props.quantity;
 	}
 
-	discountChanged = (e) => {
-		console.log("discountChanged:", e)
-		this.updateDiscount(this.state.discountType, this.state.discountAmount);
-	}
-
-	updateDiscount = (type, amount) => {
-		if (type == 'per') {
-			this.setState({ totalDiscount: this.getTotal() * (amount / 100)}, () => {console.log("total d upd: ",this.state.totalDiscount)});
-		} else {
-			this.setState({ totalDiscount: amount}, () => {console.log("total d upd: ",this.state.totalDiscount)});
-		}
-	}
-
 	handleClose = (e) => {
 		this.setState({ discountOpen: false });
-		this.props.updateDiscount(this.props.id, this.state.totalDiscount);
 	};
+
+	updateDiscountAmount = (e) => {
+		this.props.updateDiscount(this.props.id, e.target.value);
+	}
+
   render() {
-    const { id, name, unitPrice, quantity, quantity_on_hand, purchasePrice } = this.props;
+    const { id, name, unitPrice, quantity, quantity_on_hand, purchasePrice, discount, lineTotal, totalDiscount } = this.props;
     var itemNumber = quantity;
     return (
 			<tr>
@@ -56,27 +47,15 @@ class PosItem extends Component {
 					</Modal.Header>
 					<Modal.Body>
 						<div className="form-group">
-							<div>
-								<select
-									style={{ width: "75px" }}
-									className="form-control"
-									onChange={(e) => this.setState({discountType: e.target.value}, this.discountChanged)}
-									value={this.state.discountType}>
-									<option value="fix">Fixed</option>
-  								<option value="per">Percentage %</option>
-								</select>
-								<input
-								style={{ width: "75px" }}
+							<input
 								type="number"
 								className="form-control"
-								minLength={0}
-								onChange={(e) => this.setState({discountAmount: e.target.value}, this.discountChanged)}
-								value={this.state.discountAmount}
+									minLength={0}
+								onChange={this.updateDiscountAmount}
+								value={discount}
 								/>
-							</div>
 							<div className="">
-								<p style={{ fontSize: 11, color: "red" }}>Purchased on: {purchasePrice}</p>
-								<p style={{ fontSize: 11, color: "green" }}>Total discount: {purchasePrice}</p>
+								<p style={{ fontSize: 11, color: "red", marginTop: 20 }}>Purchased on: <b>{purchasePrice}</b></p>
 							</div>
 						</div>
 					</Modal.Body>
@@ -98,13 +77,6 @@ class PosItem extends Component {
           {unitPrice}{" "}
         </td>
         <td className="quantity">
-          {/* <button
-            className="btn btn-sm pull-left"
-            onClick={() => this.handleChange(id, --itemNumber)}
-          >
-            <i className="glyphicon glyphicon-minus" />
-          </button> */}
-
           <div>
             <input
               style={{ width: "75px" }}
@@ -114,28 +86,23 @@ class PosItem extends Component {
               value={itemNumber}
             />
           </div>
-
-          {/* <button
-            className="btn btn-sm pull-right"
-            onClick={() => this.handleChange(id, ++itemNumber)}
-          >
-            <i className="glyphicon glyphicon-plus" />
-          </button> */}
         </td>
         <td className="quantityAvailable">{quantity_on_hand - quantity}</td>
         <td className="tax">0.00</td>
         <td defaultValue="0.00" className="col-md-2 total">
-          {this.getTotal()}
-        </td>
-        <td defaultValue="0.00" className="delete">
-          <button
-            className="btn btn-danger"
-            onClick={() => this.handleChange(id, "delete")}
-          >
-            X
-            <i className="glyphicon glyphicon-trash" />
-					</button>
-					<Button onClick={() => this.setState({ discountOpen: true })}style={{margin: 2}} variant="success">%</Button>{' '}
+					<div>Total: {lineTotal}</div>
+					{totalDiscount > 0 && <div>Discouted: {lineTotal - totalDiscount}</div>}
+				</td>
+				<td defaultValue="0.00" className="delete">
+					<div>
+						<button
+							className="btn btn-danger"
+							onClick={() => this.handleChange(id, "delete")}
+						>
+							X
+						</button>
+					</div>
+					<Button onClick={() => this.setState({ discountOpen: true })}style={{marginTop: 2}} variant="success">%</Button>{' '}
         </td>
       </tr>
     );

@@ -209,32 +209,34 @@ table {
 
 td.descriptionReciept,
 th.descriptionReciept {
-  width: 175px;
-  max-width: 175px;
+  width: 275px;
+  max-width: 275px;
 }
 
 td.quantityReciept,
 th.quantityReciept {
-  width: 140px;
-  max-width: 140px;
+  width: 240px;
+  max-width: 240px;
   word-break: break-all;
+	padding-left: 7px;
 }
 
 td.priceReciept,
 th.priceReciept {
-  width: 140px;
-  max-width: 140px;
+  width: 275px;
+  max-width: 275px;
   word-break: break-all;
 }
 
 .centered {
   text-align: center;
   align-content: center;
+	margin-top: 5%;
 }
 
 .ticket {
-  width: 455px;
-  max-width: 455px;
+  width: 555px;
+  max-width: 555px;
   margin-top: 5px;
 }
 

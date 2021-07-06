@@ -383,7 +383,7 @@ ul.nav-menu li a h3 {
 }
 .fixed_header_pos th.quantityAvailable,
 .fixed_header_pos td.quantityAvailable {
-  width: 200px;
+  width: 100px;
   text-align: center;
 }
 .fixed_header_pos th.tax,
@@ -393,7 +393,8 @@ ul.nav-menu li a h3 {
 }
 .fixed_header_pos th.total,
 .fixed_header_pos td.total {
-  width: 100px;
+  width: 200px;
+	padding: 0px;
   text-align: left;
 }
 .fixed_header_pos th.delete,

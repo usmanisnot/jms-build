@@ -168,17 +168,10 @@ class Pos extends Component {
       this.setState({ items: newitems }, () => {
         this.updateTotal();
       });
-    } else {
-      for (var i = 0; i < items.length; i++) {
-        if (items[i].id === id) {
-          console.log("items[i] item: ", items[i]);
-          items[i].quantity = value;
-          console.log("updated item: ", items[i]);
-          this.setState({ items: items }, () => {
-            this.updateTotal();
-          });
-        }
-      }
+		} else {
+			let item = this.getItem(id);
+			item.quantity = value;
+			this.updateItem(item);
     }
   };
 
@@ -187,9 +180,11 @@ class Pos extends Component {
     var totalCost = 0;
     for (var i = 0; i < items.length; i++) {
       var unitPrice = items[i].unitPrice == undefined ? 0 : items[i].unitPrice;
-      var quantity = items[i].quantity == undefined ? 0 : items[i].quantity;
-      var price = unitPrice * quantity;
-      totalCost += price;
+			var quantity = items[i].quantity == undefined ? 0 : items[i].quantity;
+			var quantity = items[i].quantity == undefined ? 0 : items[i].quantity;
+			var price = unitPrice * quantity;
+			let disCountedPrice = price - items[i].totalDiscount;
+      totalCost += disCountedPrice;
     }
     this.setState({ total: totalCost });
   };
@@ -248,7 +243,11 @@ class Pos extends Component {
         selectedProduct.quantity == undefined ? 0 : selectedProduct.quantity,
 			barCode: selectedProduct.barCode,
 			purchasePrice: selectedProduct.purchasePrice == undefined ? 0.0 : parseFloat(selectedProduct.purchasePrice),
+			discount: 0,
 			totalDiscount: 0,
+			lineTotal: selectedProduct.listedPrice == undefined
+          ? 0.0
+          : parseFloat(selectedProduct.listedPrice),
     };
     console.log("currentItem: ", currentItem);
     this.addItem(currentItem);
@@ -278,7 +277,29 @@ class Pos extends Component {
 	};
 	
 	updateDiscount = (itemId, discount) => {
-		console.log("itemId, discount: ", itemId + ' -- ' + discount);
+		var item = this.getItem(itemId);
+		console.log("itemId, discount: ", item, ' -- ' + discount);
+		item.discount = discount;
+		this.updateItem(item);
+	}
+
+	getItem = (id) => {
+		return this.state.items.find(({ id }) => id === id);
+	}
+
+	updateItem = (item) => {
+		var items = this.state.items;
+    for (var i = 0; i < items.length; i++) {
+			if (items[i].id === item.id) {
+				item.totalDiscount = item.discount * item.quantity;
+				item.lineTotal = (item.unitPrice * item.quantity);
+				items[i] = item;
+				console.log("updated item discount: ", items[i]);
+				this.setState({ items: items }, () => {
+					this.updateTotal();
+				});
+			}
+		}
 	}
 
   render() {

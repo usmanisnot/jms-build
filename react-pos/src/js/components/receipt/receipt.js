@@ -19,7 +19,12 @@ class ComponentToPrint extends React.Component {
         <td className="quantityReciept">{item.quantity}</td>
         <td className="descriptionReciept">{item.name}</td>
         <td className="priceReciept">
-          Rs {parseFloat(item.unitPrice) * parseInt(item.quantity)}
+          Total(Rs): {parseFloat(item.lineTotal)}
+					{item.totalDiscount > 0 &&
+						<div>
+							Dicounted(Rs) {parseFloat(item.lineTotal) - parseFloat(item.totalDiscount)}
+						</div>
+					}
         </td>
       </tr>
     ));
@@ -40,10 +45,17 @@ class ComponentToPrint extends React.Component {
             <tr>
               <th className="quantityReciept">Q.</th>
               <th className="descriptionReciept">Description</th>
-              <th className="priceReciept">RS</th>
+							<th className="priceReciept">Total</th>
             </tr>
           </thead>
-          <tbody>{this.renderItems()}</tbody>
+					<tbody>{this.renderItems()}</tbody>
+					<tfoot>
+						<td></td>
+						<td></td>
+						<td>
+							Total: {total}
+						</td>
+					</tfoot>
         </table>
         <p className="centered">Thanks for your purchase!</p>
       </div>
