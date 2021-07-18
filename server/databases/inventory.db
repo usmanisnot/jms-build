@@ -1,9 +1,10 @@
-{"name":"Muhammad Usman","code":"321","quantity":"222","listedPrice":"045345","purchasePrice":"04534","stockProvider":"dfgdf","barCode":"P1624295022862","_id":"1MnXAcB8lokKqkbN"}
+{"name":"Muhammad Usman","code":"321","quantity":221,"listedPrice":"10","purchasePrice":"04534","stockProvider":"dfgdf","barCode":"P1624295022862","_id":"1MnXAcB8lokKqkbN"}
 {"name":"dispreen","quantity":109,"price":"2223","stockProvider":"32","barCode":"T1623334407262","_id":"1e3kT1wDkq5RelAQ","code":"222","purchasePrice":"112","listedPrice":"1123"}
 {"name":"dispreen","code":"123","quantity":0,"barCode":"V1622972712802","_id":"24AR6iRffCRDDH5S","price":"112","purchasePrice":"111","listedPrice":"1122"}
 {"name":"testing barcode","code":"1122334","quantity":"223","listedPrice":"2345","purchasePrice":"120","stockProvider":"adsas","barCode":"B1624293871067","_id":"IBL7cLC6yMfIUgg9"}
 {"name":"dispreen33333","code":"33334","quantity":"3333","price":"3333","stockProvider":"33","barCode":"P1623334462558","_id":"Ib4GhTfQDo2PHGPV","purchasePrice":"222","listedPrice":"3333"}
 {"name":"testing barcode 2233","code":"33","quantity":"444","listedPrice":"2345444","purchasePrice":"1204","stockProvider":"4fdfs","barCode":"X1624293900672","_id":"MVLyUfa2cDYDmfFH"}
 {"name":"fdfgd","code":"43534","quantity":"546656565","listedPrice":"045345656","purchasePrice":"04534","stockProvider":"dfgdf","barCode":"G1624295042051","_id":"MoWYnBdVnTFFpnV2"}
-{"name":"Muhammad Usman","code":"321","quantity":221,"listedPrice":"045345","purchasePrice":"04534","stockProvider":"dfgdf","barCode":"P1624295022862","_id":"1MnXAcB8lokKqkbN"}
-{"name":"Muhammad Usman","code":"321","quantity":221,"listedPrice":"10","purchasePrice":"04534","stockProvider":"dfgdf","barCode":"P1624295022862","_id":"1MnXAcB8lokKqkbN"}
+{"name":"testing barcode 2233","code":"33","quantity":443,"listedPrice":"2345444","purchasePrice":"1204","stockProvider":"4fdfs","barCode":"X1624293900672","_id":"MVLyUfa2cDYDmfFH"}
+{"name":"Muhammad Usman","code":"321","quantity":221,"listedPrice":"100","purchasePrice":"04534","stockProvider":"dfgdf","barCode":"P1624295022862","_id":"1MnXAcB8lokKqkbN"}
+{"name":"Muhammad Usman","code":"321","quantity":220,"listedPrice":"100","purchasePrice":"04534","stockProvider":"dfgdf","barCode":"P1624295022862","_id":"1MnXAcB8lokKqkbN"}
