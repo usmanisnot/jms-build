@@ -6,7 +6,7 @@ class PosItem extends Component {
   constructor(props) {
     super(props);
 		this.state = {
-			allowDecreaseQuantity: true, discountOpen: false,
+			allowDecreaseQuantity: true, discountOpen: false, afterDiscount: 0.0, discountedAmount: 0.0,
 		};
   }
   handleChange = (id, itemNumber) => {
@@ -26,14 +26,20 @@ class PosItem extends Component {
 
 	getTotal = () => {
 		return this.props.unitPrice * this.props.quantity;
-	}
+  }
+  
+  getPercentage = () => {
+    return (this.props.discount / this.props.unitPrice) * 100;
+  }
 
 	handleClose = (e) => {
 		this.setState({ discountOpen: false });
 	};
 
-	updateDiscountAmount = (e) => {
-		this.props.updateDiscount(this.props.id, e.target.value);
+  updateDiscountAmount = (e) => {
+    let percentedAmount = this.props.unitPrice * (e.target.value / 100);
+    this.props.updateDiscount(this.props.id, percentedAmount);
+    this.setState({afterDiscount: this.props.unitPrice - percentedAmount, discountedAmount: percentedAmount});
 	}
 
   render() {
@@ -43,7 +49,7 @@ class PosItem extends Component {
 			<tr>
 				<Modal show={this.state.discountOpen} onHide={this.handleClose}>
 					<Modal.Header closeButton>
-						<Modal.Title>Enter Discount</Modal.Title>
+						<Modal.Title>Enter Discount (%)</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
 						<div className="form-group">
@@ -52,10 +58,14 @@ class PosItem extends Component {
 								className="form-control"
 									minLength={0}
 								onChange={this.updateDiscountAmount}
-								value={discount}
+								value={this.getPercentage()}
 								/>
 							<div className="">
-								<p style={{ fontSize: 11, color: "red", marginTop: 20 }}>Purchased on: <b>{purchasePrice}</b></p>
+                <p style={{ fontSize: 11, color: "red", marginTop: 20 }}>Purchasing price: <b>{purchasePrice}</b></p>
+                <p style={{ fontSize: 18, color: "green", marginTop: 20 }}>Discounted Price: <b>{this.state.afterDiscount}</b></p>
+              </div>
+              <div className="">
+                <p style={{ fontSize: 17, color: "blue", marginTop: 20 }}>Discounted Amount: <b>{this.state.discountedAmount}</b></p>
 							</div>
 						</div>
 					</Modal.Body>

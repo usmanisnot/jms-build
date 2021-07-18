@@ -3,13 +3,9 @@ import "../App.css";
 import Header from "../Header";
 import io from "socket.io-client";
 import axios from "axios";
-// import moment from "moment";
 import { Table, Modal, Button, Form, Col, Row } from "react-bootstrap";
 import PosItem from "./PosItem";
 import ProductsDropdown from "./ProductsDropdown";
-import SearchBar from "./searchBar";
-import Checkout from "../Checkout";
-import Creatable, { makeCreatableSelect } from "react-select/creatable";
 
 const HOST = "http://localhost:8001";
 let socket = io.connect(HOST);
@@ -198,7 +194,7 @@ class Pos extends Component {
 
   getCurrentTransaction = () => {
     return {
-			date: "6 july",// moment().format("DD-MMM-YYYY HH:mm:ss"),
+			date: new Date().toLocaleDateString(),
       total: this.state.total,
       totalPayment: this.state.totalPayment,
       items: this.getSubmitableItems(),
