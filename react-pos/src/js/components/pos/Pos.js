@@ -156,6 +156,7 @@ class Pos extends Component {
     }
   };
   handleChange = (id, value) => {
+    debugger;
     var items = this.state.items;
     if (value === "delete") {
       var newitems = items.filter(function (item) {
@@ -280,7 +281,7 @@ class Pos extends Component {
 	}
 
 	getItem = (id) => {
-		return this.state.items.find(({ id }) => id === id);
+		return this.state.items.find((item) => item.id == id);
 	}
 
 	updateItem = (item) => {

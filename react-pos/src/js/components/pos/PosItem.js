@@ -16,12 +16,14 @@ class PosItem extends Component {
     this.props.onChange(id, itemNumber);
   };
   handleChangeQuantity = (id, e) => {
-    if (
-      this.props.quantity_on_hand - e.target.value > 0 &&
-      e.target.value != 0
-    ) {
-      this.props.onChange(id, e.target.value);
-    }
+    console.log("handleChangeQuantity id: ", id);
+    console.log("handleChangeQuantity val: ", e.target.value);
+    this.props.onChange(id, e.target.value);
+    // if (
+    //   this.props.quantity_on_hand - e.target.value > 0
+    // ) {
+      
+    // }
 	};
 
 	getTotal = () => {
@@ -29,7 +31,7 @@ class PosItem extends Component {
   }
   
   getPercentage = () => {
-    return (this.props.discount / this.props.unitPrice) * 100;
+    return (this.props.discount / this.props.unitPrice) * 100 || undefined;
   }
 
 	handleClose = (e) => {
@@ -44,7 +46,6 @@ class PosItem extends Component {
 
   render() {
     const { id, name, unitPrice, quantity, quantity_on_hand, purchasePrice, discount, lineTotal, totalDiscount } = this.props;
-    var itemNumber = quantity;
     return (
 			<tr>
 				<Modal show={this.state.discountOpen} onHide={this.handleClose}>
@@ -56,7 +57,6 @@ class PosItem extends Component {
 							<input
 								type="number"
 								className="form-control"
-									minLength={0}
 								onChange={this.updateDiscountAmount}
 								value={this.getPercentage()}
 								/>
@@ -93,7 +93,7 @@ class PosItem extends Component {
               type="number"
               minLength={0}
               onChange={(e) => this.handleChangeQuantity(id, e)}
-              value={itemNumber}
+              value={quantity}
             />
           </div>
         </td>
