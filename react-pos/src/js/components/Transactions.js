@@ -3,7 +3,6 @@ import "./App.css";
 import Header from "./Header";
 import CompleteTransactions from "./CompleteTransactions";
 import axios from "axios";
-import moment from "moment";
 import Select from "react-select";
 
 const HOST = "http://localhost:8001";
